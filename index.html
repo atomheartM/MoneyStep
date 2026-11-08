@@ -1,0 +1,1227 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0F4C3A">
+<title>머니스텝 스토리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#0F4C3A;--green:#0E9F7A;--green-d:#0A7B5E;--orange:#F2994A;--orange-d:#D57A2C;--mint:#EAF5F0;
+  --bg:#F7FAF8;--card:#fff;--text:#1d2b24;--sub:#5f6f68;--line:#dde8e3;
+  --red:#D6544A;--red-d:#B03E35;--redbg:#FDEDEA;--okbg:#E3F6EC;--warnbg:#FFF4E7;
+  --brown:#B5713A;--r:18px;
+  --display:"Jua","Noto Sans KR",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:anywhere}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit}
+#app{max-width:600px;margin:0 auto;padding:12px 16px 110px}
+body.focus #app{padding-bottom:120px}
+body.fbopen #app{padding-bottom:360px}
+h1,h2,h3{margin:0;line-height:1.35}
+p{margin:.45em 0}
+
+/* 공통 버튼 (눌리는 느낌의 입체 버튼) */
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border:0;border-radius:16px;padding:14px 18px;font-size:17px;font-weight:800;color:#fff;background:var(--green);box-shadow:0 4px 0 var(--green-d);transition:transform .06s,box-shadow .06s;letter-spacing:-.01em}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--green-d)}
+.btn.orange{background:var(--orange);box-shadow:0 4px 0 var(--orange-d)}
+.btn.red{background:var(--red);box-shadow:0 4px 0 var(--red-d)}
+.btn.white{background:#fff;color:var(--deep);box-shadow:0 4px 0 #cfe0d8}
+.btn.ghost{background:#fff;color:var(--green);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.btn.sm{width:auto;padding:9px 14px;font-size:14px;border-radius:12px}
+.btn:disabled{background:#c8d6d0;box-shadow:0 4px 0 #b3c4bc;cursor:default}
+.btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.btn-row .btn{flex:1 1 150px}
+
+/* 상단 바 */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 14px}
+.brand{display:flex;align-items:center;gap:8px}
+.brand b{font-family:var(--display);font-size:22px;color:var(--deep);font-weight:400}
+.brand small{font-size:11px;font-weight:700;color:var(--orange);background:var(--warnbg);padding:2px 8px;border-radius:20px}
+.pills{display:flex;gap:6px}
+.pill{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:4px 10px;font-weight:800;font-size:14px;color:var(--deep)}
+.pill.acorn{color:var(--brown)}
+.page-title{font-family:var(--display);font-weight:400;font-size:26px;color:var(--deep);margin:4px 0}
+.page-sub{color:var(--sub);font-size:14px;margin:0 0 14px}
+.back{background:none;border:0;color:var(--green);font-weight:800;padding:6px 0;margin-bottom:4px}
+
+/* 다람 말풍선 카드 */
+.hello{display:flex;align-items:flex-end;gap:10px;margin:6px 0 18px}
+.hello .daram{flex:0 0 auto}
+.speech{position:relative;flex:1;background:#fff;border:2px solid var(--line);border-radius:18px;padding:12px 14px;font-size:15px}
+.speech::before{content:'';position:absolute;left:-10px;bottom:18px;border:8px solid transparent;border-right-color:var(--line)}
+.speech::after{content:'';position:absolute;left:-7px;bottom:18px;border:8px solid transparent;border-right-color:#fff}
+.speech.plain::before,.speech.plain::after{display:none}
+.speech b.t{display:block;font-family:var(--display);font-weight:400;font-size:19px;color:var(--deep);margin-bottom:2px}
+.speech .btn{margin-top:10px}
+
+/* 장(챕터)과 길 */
+.chapter{margin:10px 0 26px}
+.ch-banner{background:var(--c);color:#fff;border-radius:20px;padding:14px 16px;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.ch-banner small{font-weight:700;opacity:.85;font-size:12px}
+.ch-banner h2{font-family:var(--display);font-weight:400;font-size:23px;margin:2px 0}
+.ch-banner p{margin:0;font-size:14px;opacity:.95}
+.ch-banner .prog{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;font-weight:700}
+.ch-banner .prog i{flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.3);overflow:hidden;display:block}
+.ch-banner .prog i b{display:block;height:100%;background:#fff;border-radius:6px}
+.path{display:flex;flex-direction:column;align-items:center;padding:16px 0 4px}
+.stop{position:relative;display:flex;flex-direction:column;align-items:center;transform:translateX(var(--x));margin-bottom:14px;width:150px}
+.node{width:72px;height:68px;border-radius:50%;border:0;background:#fff;box-shadow:0 6px 0 var(--line),inset 0 0 0 3px var(--line);font-size:30px;display:grid;place-items:center;transition:transform .06s}
+.node:active{transform:translateY(4px);box-shadow:0 2px 0 var(--line),inset 0 0 0 3px var(--line)}
+.node.done{background:var(--c);box-shadow:0 6px 0 rgba(0,0,0,.18)}
+.node.doing{background:#fff;box-shadow:0 6px 0 var(--orange-d),inset 0 0 0 4px var(--orange)}
+.node.next{animation:pulse 1.8s infinite}
+.node.mission{border-radius:22px}
+.node .ck{position:absolute;right:30px;top:-4px;background:#fff;color:var(--green);border-radius:50%;width:24px;height:24px;font-size:14px;display:grid;place-items:center;font-weight:900;box-shadow:0 2px 0 rgba(0,0,0,.12)}
+.stop-label{font-size:13px;font-weight:700;text-align:center;margin-top:10px;line-height:1.35;color:var(--text)}
+.stop-label small{display:block;font-weight:500;color:var(--sub);font-size:11px}
+.stop .buddy{position:absolute;top:-6px;width:74px;display:flex;flex-direction:column;align-items:center}
+.stop .buddy.l{right:calc(100% - 22px)}
+.stop .buddy.r{left:calc(100% - 22px)}
+.stop .buddy span{font-size:11px;font-weight:800;background:var(--orange);color:#fff;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-bottom:-2px}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+/* 레슨 화면 */
+.lesson-top{display:flex;align-items:center;gap:10px;margin:2px 0 14px}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:0;background:transparent;font-size:22px;color:#90a19a;flex:0 0 38px}
+.bar{flex:1;height:14px;background:var(--line);border-radius:10px;overflow:hidden}
+.bar div{height:100%;background:var(--green);border-radius:10px;transition:width .35s;position:relative}
+.bar div::after{content:'';position:absolute;left:8px;right:8px;top:3px;height:4px;border-radius:4px;background:rgba(255,255,255,.35)}
+.lesson-name{font-size:12px;color:var(--sub);margin:-6px 0 12px 48px;font-weight:600}
+.retry{display:inline-block;font-size:12px;font-weight:800;color:var(--orange-d);background:var(--warnbg);padding:4px 10px;border-radius:20px;margin-bottom:10px}
+
+/* 대화 */
+.chat{display:flex;flex-direction:column;gap:12px;min-height:200px}
+.line{display:flex;align-items:flex-end;gap:8px;animation:pop .25s ease-out}
+.line.r{flex-direction:row-reverse}
+.line .av{flex:0 0 44px}
+.say{max-width:78%}
+.line.r .say{text-align:right}
+.who{font-size:12px;font-weight:800;color:var(--sub);margin:0 6px 2px}
+.bubble{display:inline-block;text-align:left;background:#fff;border:2px solid var(--line);border-radius:18px 18px 18px 6px;padding:10px 14px;font-size:16px}
+.line.r .bubble{background:var(--green);border-color:var(--green);color:#fff;border-radius:18px 18px 6px 18px}
+.line.r .bubble .term{color:#fff;border-bottom-color:#bff0dc}
+.line.d .bubble{background:#FFF8EE;border-color:#F4DDBF}
+.narr{align-self:center;max-width:92%;text-align:center;font-size:14px;color:var(--sub);background:var(--mint);padding:8px 14px;border-radius:14px;animation:pop .25s ease-out}
+.tap-hint{text-align:center;font-size:12px;color:#9aaba4;margin-top:6px}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+
+/* 문제 */
+.ask{display:flex;align-items:flex-end;gap:8px;margin-bottom:16px}
+.ask .daram{flex:0 0 auto}
+.ask .speech{font-size:17px;font-weight:700;line-height:1.55}
+.ask .speech .kind{display:block;font-size:12px;font-weight:800;color:var(--orange-d);margin-bottom:2px}
+.hint{margin-top:8px;font-size:14px;font-weight:500;background:var(--warnbg);border-radius:10px;padding:8px 10px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{text-align:left;background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px 16px;font-size:16px;box-shadow:0 4px 0 var(--line);transition:transform .06s}
+.opt:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--green);background:var(--okbg);box-shadow:0 4px 0 var(--green);font-weight:800}
+.opt.wrong{border-color:var(--red);background:var(--redbg);box-shadow:0 4px 0 var(--red)}
+.opt:disabled:not(.correct):not(.wrong){opacity:.55}
+.ox{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ox .opt{text-align:center;padding:18px 8px}
+.ox .opt .mark{display:block;font-family:var(--display);font-size:56px;line-height:1.05;color:inherit}
+.ox .o .mark{color:var(--green)!important}
+.ox .x .mark{color:var(--red)!important}
+.ox .opt span{font-size:14px;font-weight:700;color:var(--sub)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.chips .opt{padding:10px 18px}
+.sentence{font-size:19px;font-weight:700;text-align:center;background:#fff;border:2px dashed var(--line);border-radius:16px;padding:18px 12px;margin-bottom:16px;line-height:1.8}
+.slot{display:inline-block;min-width:84px;border-bottom:3px solid var(--green);color:var(--green);padding:0 6px}
+.slot.ok{background:var(--okbg);color:var(--deep);border-radius:8px 8px 0 0}
+.slot.bad{background:var(--redbg);color:var(--red);border-color:var(--red);border-radius:8px 8px 0 0}
+.say-opts .opt{border-color:#bfe5d3;background:#F3FBF7}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.match .col{display:flex;flex-direction:column;gap:10px}
+.match .opt{text-align:center;padding:12px 8px;font-size:15px;min-height:58px}
+.match .col.l .opt{font-weight:800;color:var(--deep)}
+.match .opt.sel{border-color:var(--orange);background:var(--warnbg);box-shadow:0 4px 0 var(--orange)}
+.match .opt.done{border-color:var(--green);background:var(--okbg);box-shadow:0 2px 0 var(--green);opacity:.75}
+.match .opt.miss{animation:shake .35s}
+.order-sel{display:flex;flex-direction:column;gap:8px;min-height:120px;background:#fff;border:2px dashed var(--line);border-radius:16px;padding:12px;margin-bottom:14px;counter-reset:ord}
+.order-sel:empty::before{content:'아래에서 순서대로 눌러 주세요';color:#9aaba4;font-size:14px;text-align:center;margin:auto}
+.order-sel .opt{counter-increment:ord;padding:10px 14px}
+.order-sel .opt::before{content:counter(ord);display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--mint);color:var(--deep);font-size:12px;font-weight:800;margin-right:8px}
+.order-pool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center}
+.order-pool .opt{padding:10px 14px}
+.combo{display:inline-block;margin-left:8px;font-size:13px;font-weight:800;color:#fff;background:var(--orange);padding:2px 9px;border-radius:20px;vertical-align:4px}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.task{background:var(--warnbg);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:700;margin:-4px 0 12px}
+
+/* 피드백 패널 */
+.fbp{position:fixed;left:0;right:0;bottom:0;z-index:30;animation:slide .22s ease-out}
+.fbp.hidden{display:none}
+.fbp-in{max-width:600px;margin:0 auto;padding:14px 16px calc(16px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;max-height:62vh;overflow:auto;box-shadow:0 -6px 24px rgba(0,0,0,.08)}
+.fbp-in.good{background:var(--okbg)}
+.fbp-in.bad{background:var(--redbg)}
+.fbp-head{display:flex;align-items:center;gap:10px}
+.fbp-head b{font-family:var(--display);font-weight:400;font-size:22px}
+.good .fbp-head b{color:var(--green-d)}
+.bad .fbp-head b{color:var(--red-d)}
+.plus{display:inline-flex;align-items:center;gap:3px;margin-left:8px;font-size:14px;font-weight:800;color:var(--brown);background:#fff;padding:2px 8px;border-radius:20px;vertical-align:4px}
+.fbp-exp{font-size:15px;margin:6px 0 4px}
+.fbp-note{font-size:13px;color:var(--sub);margin:4px 0 0}
+.fbp .btn{margin-top:12px}
+@keyframes slide{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.actionbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:linear-gradient(transparent,var(--bg) 30%);padding:26px 16px calc(16px + env(safe-area-inset-bottom))}
+.actionbar>div{max-width:568px;margin:0 auto}
+
+/* 용어 */
+.term{display:inline;background:none;border:0;padding:0;color:inherit;font-weight:800;border-bottom:2.5px dotted var(--green);line-height:inherit}
+.term:hover{background:rgba(14,159,122,.08)}
+
+/* 안내문 */
+.doc{background:#FFFDF8;border:1.5px solid #E9DFCC;border-radius:14px;padding:14px;margin-bottom:16px;font-size:14px}
+.doc-bank{font-size:12px;font-weight:800;color:#8a7a5a}
+.doc-title{font-size:16px;font-weight:800;margin:2px 0 8px}
+.doc table{width:100%;border-collapse:collapse}
+.doc th,.doc td{border-top:1px solid #efe6d4;padding:7px 6px;text-align:left;vertical-align:top}
+.doc th{color:#6d6150;font-weight:600}
+.doc thead th{background:#f7f0e2;border-top:0}
+.doc td.num{text-align:right;font-variant-numeric:tabular-nums}
+.doc tr.sum td,.doc tr.sum th{font-weight:800;color:var(--deep);border-top:2px solid #e2d6bd}
+.doc-note{font-size:12px;color:#8a7a5a;margin-top:8px}
+
+/* 시뮬레이션 */
+.sim{background:#fff;border:2px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:16px}
+.sim-title{font-weight:800;color:var(--deep);margin-bottom:8px}
+.ctrl{margin-bottom:8px}
+.ctrl-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px}
+.ctrl-top label{font-weight:700;color:var(--sub)}
+.ctrl-val{display:flex;align-items:center;gap:4px;font-weight:800}
+.ctrl-val input{width:84px;text-align:right;font-weight:800;border:1.5px solid var(--line);border-radius:8px;padding:3px 8px;background:var(--bg)}
+.ctrl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent}
+.ctrl input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:6px;background:var(--line)}
+.ctrl input[type=range]::-moz-range-track{height:8px;border-radius:6px;background:var(--line)}
+.ctrl input[type=range]::-moz-range-progress{height:8px;border-radius:6px;background:var(--green)}
+.ctrl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--orange);border:4px solid #fff;box-shadow:0 2px 0 var(--orange-d),0 1px 6px rgba(0,0,0,.2);margin-top:-9px}
+.ctrl input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--orange);border:4px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--sub);margin:4px 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.sim canvas{width:100%;display:block}
+.sim-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px}
+.sim-stats div{background:var(--mint);border-radius:12px;padding:8px 10px}
+.sim-stats span{display:block;font-size:12px;color:var(--sub)}
+.sim-stats b{font-size:16px;color:var(--deep)}
+.sim-note{font-size:12px;color:#a35d1c;margin:10px 0 0}
+
+/* 목록 */
+.list-item{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 3px 0 var(--line)}
+.list-item b{display:block}
+.list-item span{font-size:13px;color:var(--sub)}
+.section-label{font-size:13px;font-weight:800;color:var(--sub);margin:18px 0 8px}
+.badge{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--mint);color:var(--deep);white-space:nowrap}
+.badge.o{background:var(--warnbg);color:var(--orange-d)}
+.gloss{background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
+.gloss-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.gloss-top b{font-size:17px;color:var(--deep)}
+.gloss p{margin:6px 0 0;font-size:15px}
+.gloss .ex{font-size:14px;color:var(--sub)}
+.chip-list{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}
+.chip-list .term{border:2px solid var(--line);border-radius:20px;padding:4px 12px;background:#fff}
+.card{background:#fff;border:2px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.small{font-size:13px;color:var(--sub)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-family:var(--display);font-weight:400;font-size:26px;color:var(--deep);line-height:1.2}
+.stat span{font-size:12px;color:var(--sub)}
+.ubar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:4px}
+.ubar div{height:100%;background:var(--green)}
+details{margin-top:12px}
+summary{cursor:pointer;color:var(--sub);font-size:14px}
+.notice-bar{background:var(--warnbg);color:#8a4a12;font-size:13px;padding:10px 12px;border-radius:12px;margin-bottom:12px}
+
+/* 결과 */
+.result{text-align:center;padding:10px 0 4px}
+.result h2{font-family:var(--display);font-weight:400;font-size:30px;color:var(--deep);margin-top:6px}
+.reward{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
+.reward div{border:2px solid var(--line);border-radius:16px;padding:10px;background:#fff}
+.reward b{display:flex;align-items:center;justify-content:center;gap:4px;font-family:var(--display);font-weight:400;font-size:26px;color:var(--brown)}
+.reward div:last-child b{color:var(--green)}
+.reward span{font-size:12px;color:var(--sub);font-weight:700}
+
+/* 시트 */
+.sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet.hidden{display:none}
+.sheet-bg{position:absolute;inset:0;background:rgba(10,30,22,.45)}
+.sheet-panel{position:relative;width:100%;max-width:600px;background:#fff;border-radius:24px 24px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));animation:slide .2s ease-out;max-height:85vh;overflow:auto}
+.sheet-panel h3{font-family:var(--display);font-weight:400;font-size:24px;color:var(--deep)}
+.sheet-ex{background:var(--mint);border-radius:12px;padding:10px 12px;font-size:15px;margin-top:10px}
+.sheet-ex b{color:var(--green);margin-right:6px}
+.sheet-meta{font-size:12px;color:var(--sub);margin:10px 0 14px}
+
+/* 하단 내비 */
+.nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid var(--line);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+.nav-in{max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 0 8px;background:none;border:0;color:#9aaba4;font-size:12px;font-weight:800}
+.nav button .ni{font-size:23px;line-height:1.2;filter:grayscale(1) opacity(.55)}
+.nav button.on{color:var(--deep)}
+.nav button.on .ni{filter:none}
+body.focus .nav{display:none}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--deep);color:#fff;padding:10px 16px;border-radius:24px;font-size:14px;z-index:60;animation:pop .2s}
+.daram.happy,.daram.cheer{animation:hop .5s ease-out}
+@keyframes hop{0%{transform:translateY(0)}35%{transform:translateY(-8px)}70%{transform:translateY(0)}85%{transform:translateY(-2px)}}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<nav class="nav" aria-label="주요 메뉴"><div class="nav-in">
+  <button type="button" data-go="#home" data-nav="home"><span class="ni">🌳</span>학습</button>
+  <button type="button" data-go="#sim" data-nav="sim"><span class="ni">🎛️</span>시뮬레이션</button>
+  <button type="button" data-go="#glossary" data-nav="glossary"><span class="ni">📒</span>용어장</button>
+  <button type="button" data-go="#records" data-nav="records"><span class="ni">📅</span>기록</button>
+</div></nav>
+
+<div id="fbp" class="fbp hidden" aria-live="polite"></div>
+<div id="sheet" class="sheet hidden"><div class="sheet-bg" data-close></div><div class="sheet-panel" role="dialog" aria-modal="true"></div></div>
+
+<script>
+'use strict';
+/* =========================================================
+   머니스텝 스토리판 (브랜치)
+   - 캐릭터(다람)와 함께 사회초년생 하루의 1년을 따라가는 이야기형 학습
+   - 단일 HTML · 외부 JS 라이브러리 없음 · 저장: localStorage
+   - 화면 전환은 주소(#)를 쓰지 않는 내부 라우터 (미리보기 창에서도 동작)
+   ========================================================= */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+const app = () => document.getElementById('app');
+
+/* ---------------- 1. 유틸 ---------------- */
+function today(d = new Date()) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function daysBetween(a, b) { const pa = a.split('-').map(Number), pb = b.split('-').map(Number); return Math.round((Date.UTC(pb[0], pb[1] - 1, pb[2]) - Date.UTC(pa[0], pa[1] - 1, pa[2])) / 864e5); }
+const nf = (n, d = 0) => Number(n).toLocaleString('ko-KR', { maximumFractionDigits: d });
+const won = n => nf(Math.round(n)) + '원';
+function man(n, d = 1) {
+  const m = n / 1e4;
+  if (Math.abs(m) >= 1e4) { const eok = Math.floor(m / 1e4), rest = Math.round(m - eok * 1e4); return nf(eok) + '억' + (rest > 0 ? ' ' + nf(rest) + '만' : '') + ' 원'; }
+  return nf(m, d) + '만 원';
+}
+function axisMan(v) { if (v >= 1e8) return nf(v / 1e8, 1) + '억'; if (v === 0) return '0'; return nf(v / 1e4, v < 1e5 ? 1 : 0) + '만'; }
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+
+/* ---------------- 2. 캐릭터 (직접 그린 SVG) ---------------- */
+// 다람: 도토리를 모으는 다람쥐. 표정 normal · happy · think · oops · cheer
+function daram(mood = 'normal', size = 96) {
+  const eyes = {
+    normal: '<circle cx="46" cy="44" r="3.8" fill="#2B1A0E"/><circle cx="66" cy="44" r="3.8" fill="#2B1A0E"/><circle cx="47.3" cy="42.6" r="1.3" fill="#fff"/><circle cx="67.3" cy="42.6" r="1.3" fill="#fff"/>',
+    happy: '<path d="M42 46q4-6 8 0M62 46q4-6 8 0" stroke="#2B1A0E" stroke-width="2.8" fill="none" stroke-linecap="round"/>',
+    cheer: '<path d="M42 46q4-6 8 0M62 46q4-6 8 0" stroke="#2B1A0E" stroke-width="2.8" fill="none" stroke-linecap="round"/>',
+    think: '<circle cx="47" cy="42" r="3.6" fill="#2B1A0E"/><circle cx="67" cy="42" r="3.6" fill="#2B1A0E"/><circle cx="48" cy="40.6" r="1.2" fill="#fff"/><circle cx="68" cy="40.6" r="1.2" fill="#fff"/><path d="M41 35l8-2M63 33l8 2" stroke="#7A4A22" stroke-width="2.2" stroke-linecap="round"/>',
+    oops: '<circle cx="46" cy="45" r="3.4" fill="#2B1A0E"/><circle cx="66" cy="45" r="3.4" fill="#2B1A0E"/><path d="M41 39l8-3.5M71 39l-8-3.5" stroke="#7A4A22" stroke-width="2.2" stroke-linecap="round"/><path d="M85 30q5 7 0 10q-5-3 0-10z" fill="#8FCDEB"/>'
+  }[mood] || '';
+  const mouth = {
+    normal: '<path d="M52 60q4 3.2 8 0" stroke="#4A2A14" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+    think: '<path d="M53 61h6" stroke="#4A2A14" stroke-width="2.2" stroke-linecap="round"/>',
+    oops: '<path d="M52 62q4-3 8 0" stroke="#4A2A14" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+    happy: '<path d="M50 58.5q6 9 12 0z" fill="#8A3B22"/><path d="M53 61.5q3 2 6 0" fill="#E2777A"/>',
+    cheer: '<path d="M49.5 58q6.5 10 13 0z" fill="#8A3B22"/><path d="M53 61.5q3.5 2.4 7 0" fill="#E2777A"/>'
+  }[mood] || '';
+  const arms = mood === 'cheer'
+    ? '<ellipse cx="31" cy="66" rx="5" ry="10" fill="#C9772F" transform="rotate(-35 31 66)"/><ellipse cx="81" cy="66" rx="5" ry="10" fill="#C9772F" transform="rotate(35 81 66)"/>'
+    : mood === 'think'
+      ? '<ellipse cx="37" cy="86" rx="5" ry="9" fill="#C9772F"/><ellipse cx="70" cy="66" rx="5" ry="8" fill="#C9772F" transform="rotate(-50 70 66)"/>'
+      : '<ellipse cx="37" cy="86" rx="5" ry="9" fill="#C9772F"/><ellipse cx="75" cy="86" rx="5" ry="9" fill="#C9772F"/>';
+  const acorn = (mood === 'normal' || mood === 'happy') ? '<g transform="translate(56 92)"><ellipse cy="3" rx="6.5" ry="7.5" fill="#B5713A"/><path d="M-7.5-1q7.5-8 15 0q-7.5 3-15 0z" fill="#7A4A22"/><path d="M0-6v-3" stroke="#7A4A22" stroke-width="2" stroke-linecap="round"/></g>' : '';
+  return `<svg class="daram ${mood}" width="${size}" height="${size}" viewBox="0 0 120 120" role="img" aria-label="다람">
+    <path d="M70 106c28 2 44-20 38-46-4-18-22-27-34-17-10 8-4 21 6 23 9 2 12 10 6 18-6 8-11 14-16 22z" fill="#C9772F"/>
+    <path d="M88 52c10 2 14 12 8 22" stroke="#E9A866" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="46" cy="110" rx="9" ry="4.5" fill="#B5662A"/><ellipse cx="66" cy="110" rx="9" ry="4.5" fill="#B5662A"/>
+    <ellipse cx="56" cy="86" rx="24" ry="25" fill="#D98B48"/>
+    <ellipse cx="56" cy="91" rx="14" ry="16" fill="#F7E1C6"/>
+    ${arms}${acorn}
+    <path d="M35 66q21 11 42 0v8q-21 11-42 0z" fill="#0E9F7A"/><path d="M68 72l9 13-10-1z" fill="#0F4C3A"/>
+    <ellipse cx="38" cy="26" rx="8" ry="12" fill="#C9772F" transform="rotate(-18 38 26)"/><ellipse cx="74" cy="26" rx="8" ry="12" fill="#C9772F" transform="rotate(18 74 26)"/>
+    <ellipse cx="38.5" cy="27" rx="4" ry="7" fill="#F2B8A0" transform="rotate(-18 38.5 27)"/><ellipse cx="73.5" cy="27" rx="4" ry="7" fill="#F2B8A0" transform="rotate(18 73.5 27)"/>
+    <circle cx="56" cy="46" r="26" fill="#D98B48"/>
+    <ellipse cx="56" cy="57" rx="13.5" ry="9.5" fill="#F7E1C6"/>
+    <circle cx="36.5" cy="54" r="4.2" fill="#F2A08A" opacity=".75"/><circle cx="75.5" cy="54" r="4.2" fill="#F2A08A" opacity=".75"/>
+    ${eyes}
+    <ellipse cx="56" cy="52.5" rx="3.6" ry="2.7" fill="#4A2A14"/>
+    ${mouth}
+  </svg>`;
+}
+function haru(size = 44) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" role="img" aria-label="하루"><circle cx="24" cy="24" r="24" fill="#DDF3EA"/>
+    <path d="M9 30c-1-13 6-21 15-21s16 8 15 21l-3 2c0-8-5-13-12-13s-12 5-12 13z" fill="#3A2A22"/>
+    <circle cx="24" cy="28" r="12" fill="#F6D2B0"/>
+    <path d="M12 26c1-8 6-12 12-12s11 4 12 12c-4-5-8-7-12-7-5 0-9 2-12 7z" fill="#3A2A22"/>
+    <circle cx="19.5" cy="29" r="1.6" fill="#2B1A0E"/><circle cx="28.5" cy="29" r="1.6" fill="#2B1A0E"/>
+    <circle cx="16.5" cy="32.5" r="2" fill="#F2A08A" opacity=".7"/><circle cx="31.5" cy="32.5" r="2" fill="#F2A08A" opacity=".7"/>
+    <path d="M21.5 33.5q2.5 2.2 5 0" stroke="#7A3B22" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
+}
+function jiho(size = 44) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" role="img" aria-label="지호"><circle cx="24" cy="24" r="24" fill="#E4ECFA"/>
+    <circle cx="24" cy="28" r="12" fill="#EFC9A4"/>
+    <path d="M11 26c0-9 6-14 13-14s13 5 13 14l-3-4-3 2-3-3-4 2-4-2-3 3-3-2z" fill="#5B3A29"/>
+    <circle cx="19.5" cy="29" r="3.6" fill="none" stroke="#2F3A55" stroke-width="1.5"/><circle cx="28.5" cy="29" r="3.6" fill="none" stroke="#2F3A55" stroke-width="1.5"/><path d="M23 29h2" stroke="#2F3A55" stroke-width="1.5"/>
+    <circle cx="19.5" cy="29" r="1.3" fill="#2B1A0E"/><circle cx="28.5" cy="29" r="1.3" fill="#2B1A0E"/>
+    <path d="M21.5 34q2.5 1.8 5 0" stroke="#7A3B22" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
+}
+const ACORN = '<svg width="16" height="18" viewBox="-8 -10 16 19" aria-hidden="true"><ellipse cy="3" rx="6.5" ry="7.5" fill="#B5713A"/><path d="M-7.5-1q7.5-8 15 0q-7.5 3-15 0z" fill="#7A4A22"/><path d="M0-6v-3" stroke="#7A4A22" stroke-width="2" stroke-linecap="round"/></svg>';
+const WHO = {
+  d: { name: '다람', side: 'l d', av: m => daram(m || 'normal', 46) },
+  h: { name: '하루', side: 'r', av: () => haru(44) },
+  j: { name: '지호', side: 'l', av: () => jiho(44) }
+};
+
+/* ---------------- 3. 저장 ---------------- */
+const KEY = 'moneystep.story.v1';
+function blankState() {
+  return { version: 1, createdAt: today(), intro: false, placement: null, lessons: {}, days: [], lastVisit: null, glossary: {}, wrongBank: [], current: null, acorns: 0, sound: true };
+}
+let storageOk = true;
+function loadState() {
+  try { const raw = localStorage.getItem(KEY); if (raw) { const d = JSON.parse(raw); if (d && d.version === 1) return Object.assign(blankState(), d); } } catch (e) { storageOk = false; }
+  return blankState();
+}
+let S = loadState();
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { storageOk = false; } }
+function markStudy() { const t = today(); if (!S.days.includes(t)) S.days.push(t); }
+function isDone(lid) { const s = S.lessons[lid]; return !!(s && (s.everDone || s.status === 'done')); }
+
+/* ---------------- 4. 용어 (풀이 안에 다른 어려운 용어를 쓰지 않음 · 기준: 한국은행 「경제금융용어 700선」) ---------------- */
+const TERMS = {
+  '세전': { d: '세금 등을 떼기 전의 금액이에요. 계약서나 안내문의 숫자는 보통 이 기준이에요.', ex: '계약서에 적힌 "월 250만 원".' },
+  '세후': { d: '세금을 뗀 뒤 실제로 손에 들어오는 금액이에요.', ex: '이자 10만 원 중 세금을 떼고 받은 84,600원.' },
+  '실수령액': { d: '세금과 보험료 등을 떼고 실제로 통장에 들어오는 돈이에요.', ex: '계약서엔 월 250만 원, 통장에는 약 222만 원.' },
+  '4대보험': { d: '일하는 사람이 함께 드는 나라 보험 네 가지(국민연금·건강보험·고용보험·산재보험)예요. 월급에서 일부를 떼어 내요.', ex: '월급 명세서의 "공제" 칸에 나오는 항목들.' },
+  '고정비': { d: '월세·통신비처럼 매달 거의 같은 금액이 나가는 돈이에요.', ex: '매달 25일에 빠져나가는 월세 50만 원.' },
+  '변동비': { d: '외식비·쇼핑처럼 달마다 금액이 달라지는 돈이에요.', ex: '이번 달은 친구 생일이 많아서 외식비가 늘었어요.' },
+  '비상금': { d: '갑자기 아프거나 물건이 고장 나는 것처럼 예상 못 한 일에 쓰려고 따로 모아 두는 돈이에요.', ex: '휴대폰 화면이 깨졌을 때 꺼내 쓰는 돈.' },
+  '원금': { d: '처음에 맡기거나 빌린 돈 그 자체예요.', ex: '은행에 처음 넣은 100만 원.' },
+  '이자': { d: '돈을 맡기거나 빌려준 대가로 더 받는 돈이에요. 빌린 쪽은 이 돈을 더 내요.', ex: '100만 원을 맡겼더니 1년 뒤 103만 원이 되었다면 늘어난 3만 원.' },
+  '금리': { d: '맡기거나 빌린 돈에 비해 이자가 몇 %인지 나타낸 비율이에요. 보통 1년 기준이에요.', ex: '100만 원에 1년 이자가 3만 원이면 "연 3%".' },
+  '예금': { d: '정해진 기간 동안 목돈을 한 번에 맡기는 은행 상품이에요.', ex: '모아 둔 100만 원을 1년 동안 한 번에 맡기기.' },
+  '적금': { d: '정해진 기간 동안 매달 정해진 돈을 나눠 넣는 은행 상품이에요.', ex: '월급날마다 30만 원씩 1년 동안 넣기.' },
+  '만기': { d: '처음에 약속한 기간이 끝나는 날이에요.', ex: '오늘 1년짜리에 가입하면 1년 뒤 오늘.' },
+  '중도해지': { d: '약속한 기간이 끝나기 전에 깨고 돈을 찾는 거예요. 보통 약속보다 적은 이자를 받아요.', ex: '1년짜리 예금을 6개월 만에 깨기.' },
+  '이자소득세': { d: '이자로 번 돈에 붙는 세금이에요. 일반적으로 이자의 15.4%예요. 세율은 바뀔 수 있어요.', ex: '이자 10만 원이면 15,400원을 떼요.' },
+  '단리': { d: '처음 맡긴 돈에만 이자를 붙이는 방식이에요. 해마다 받는 이자가 같아요.', ex: '1,000만 원·연 5%면 해마다 50만 원씩.' },
+  '복리': { d: '이자를 원래 돈에 더한 뒤, 그 합계에 다시 이자를 붙이는 방식이에요.', ex: '2년째에는 1,050만 원에 이자가 붙어 52.5만 원.' },
+  '기본금리': { d: '아무 조건 없이 가입한 사람 누구나 받는 금리예요.', ex: '안내문의 "기본 연 2.5%".' },
+  '우대금리': { d: '정해진 조건을 채우면 추가로 더 얹어 주는 금리예요.', ex: '월급을 이 은행으로 받으면 1%p 더.' },
+  '대출': { d: '은행 등에서 돈을 빌리는 거예요. 빌린 대가로 이자를 내요.', ex: '보증금이 모자라 은행에서 300만 원 빌리기.' },
+  '고정금리': { d: '빌리는 기간 내내 금리가 바뀌지 않는 방식이에요.', ex: '3년 내내 연 5%.' },
+  '변동금리': { d: '시장 상황에 따라 정해진 때마다 금리가 바뀌는 방식이에요.', ex: '처음엔 연 4%였다가 6개월 뒤 4.5%로 오를 수 있어요.' },
+  '총이자': { d: '갚는 기간 전체 동안 낸 이자를 모두 더한 금액이에요.', ex: '3년 동안 낸 이자를 전부 더한 값.' },
+  '신용카드': { d: '카드회사가 먼저 대신 내 주고, 다음 달에 한꺼번에 갚는 카드예요. 결국 빌려 쓰는 돈이에요.', ex: '이번 달에 쓴 30만 원을 다음 달 결제일에 갚아요.' },
+  '체크카드': { d: '쓰는 순간 내 통장에서 바로 돈이 빠져나가는 카드예요.', ex: '통장에 5만 원이 있으면 5만 원까지만 쓸 수 있어요.' },
+  '할부': { d: '물건값을 몇 달에 나눠 내는 방식이에요. 무이자 행사가 아니면 수수료가 더 붙어요.', ex: '노트북 값을 12개월로 나눠 내기.' },
+  '신용점수': { d: '빌린 돈을 제때 갚을 사람인지를 점수로 나타낸 거예요. 우리나라는 보통 1~1000점이에요.', ex: '점수가 높을수록 더 낮은 금리로 빌릴 가능성이 커요.' },
+  '연체': { d: '갚기로 한 날짜를 넘겨서 돈을 내지 못하는 거예요.', ex: '카드값 결제일이 10일인데 20일까지 못 낸 경우.' },
+  '물가': { d: '여러 물건과 서비스 가격을 한데 모아 평균 낸 수준이에요.', ex: '밥값·교통비·월세가 전반적으로 오르면 "물가가 올랐다".' },
+  '물가상승률': { d: '물건과 서비스 가격이 1년 동안 평균 몇 % 올랐는지 나타낸 숫자예요.', ex: '1만 원어치 장바구니가 10,300원이 되면 3%.' },
+  '구매력': { d: '같은 돈으로 살 수 있는 물건의 양이에요. 가격이 오르면 줄어요.', ex: '1만 원으로 김밥 3줄을 사다가 2줄만 살 수 있게 되면 줄어든 것.' },
+  '인플레이션': { d: '물건과 서비스 가격이 전반적으로 계속 오르는 현상이에요.', ex: '몇 년 사이 밥값·월세·교통비가 모두 꾸준히 올랐다면.' },
+  '명목금리': { d: '안내문에 적힌 금리 숫자 그대로예요. 물건값이 오른 것은 따지지 않아요.', ex: '안내문의 "연 3%".' },
+  '실질금리': { d: '금리에서 물건값이 오른 만큼을 뺀 것으로, 살 수 있는 양이 실제로 늘어나는 비율이에요.', ex: '금리 3%, 물건값 2% 상승이면 약 1%.' },
+  '국민연금': { d: '일하는 동안 조금씩 보험료를 내고, 나이가 들어 일을 그만둔 뒤 매달 돌려받는 나라 연금이에요.', ex: '하루의 월급 명세서에서 빠져나간 118,750원.' },
+  '퇴직연금': { d: '회사가 일하는 동안 따로 쌓아 두었다가, 회사를 그만두거나 나이가 들었을 때 받는 돈이에요.', ex: '회사를 오래 다닐수록 쌓이는 돈.' },
+  '개인연금': { d: '노후를 위해 내가 스스로 골라 가입하는 연금 상품이에요.', ex: '매달 20만 원씩 스스로 넣는 노후 준비 통장.' },
+  '소득대체율': { d: '일할 때 벌던 돈과 비교해 연금으로 받는 돈이 몇 %인지 나타낸 비율이에요.', ex: '평균 월급으로 40년 가입한 사람 기준 43%라면, 벌던 돈의 약 43%를 연금으로 받는다는 뜻.' }
+};
+function T(text) { return String(text).replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (m, t, d) => TERMS[t] ? `<button type="button" class="term" data-term="${t}">${d || t}</button>` : (d || t)); }
+function P(text) { return String(text).replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (m, t, d) => d || t); }
+function termsIn(obj) { const set = new Set(); JSON.stringify(obj).replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, (m, t) => { if (TERMS[t]) set.add(t); }); return [...set]; }
+
+/* ---------------- 5. 이야기 (5장 17레슨) ----------------
+   t: talk(대화) · choice(고르기) · ox(O/X) · blank(빈칸) · notice(안내문 읽기) · slide(슬라이더로 확인)
+   대화 줄: [화자, 말, 다람 표정]  화자 d=다람 h=하루 j=지호 n=해설 */
+const CH = [
+  { id: 1, month: '3월', title: '첫 월급', color: '#0E9F7A', story: '드디어 첫 월급날! 그런데 통장에 찍힌 숫자가 이상하다?', lessons: ['1-1', '1-2', '1-3'] },
+  { id: 2, month: '4~5월', title: '돈 불리기', color: '#12867A', story: '모은 돈을 어디에 맡길까? 금리와 이자의 세계로.', lessons: ['2-1', '2-2', '2-3', '2-4'] },
+  { id: 3, month: '6~8월', title: '빌리기와 신용', color: '#E07B39', story: '첫 자취 시작! 보증금, 카드값, 그리고 신용점수.', lessons: ['3-1', '3-2', '3-3', '3-4'] },
+  { id: 4, month: '9~10월', title: '물가와 돈의 가치', color: '#B4693C', story: '김밥값이 또 올랐다. 내 돈의 진짜 가치는?', lessons: ['4-1', '4-2', '4-3'] },
+  { id: 5, month: '11~12월', title: '노후 준비, 연금', color: '#0F4C3A', story: '첫 월급 때 빠져나간 국민연금의 정체를 밝혀라!', lessons: ['5-1', '5-2', '5-3'] }
+];
+const L = {
+'1-1': { ch: 1, icon: '💰', title: '월급이 왜 이것뿐이지?', sub: '세전 월급과 실수령액', steps: [
+  { t: 'talk', lines: [['n', '3월 25일, 하루의 첫 월급날.'], ['h', '드디어 월급! 계약서에 월 250만 원이었으니까…'], ['h', '어? 통장에 222만 원만 들어왔어?! 28만 원은 어디 간 거야?'], ['d', '안녕! 나는 다람이야. 도토리 모으기가 특기인 다람쥐지. 같이 월급 명세서를 볼까?', 'happy']] },
+  { t: 'notice', doc: { bank: '○○주식회사', title: '3월 급여 명세서 (예시)', rows: [['지급 합계', '2,500,000원'], ['국민연금', '− 118,750원'], ['건강보험(장기요양 포함)', '− 101,680원'], ['고용보험', '− 22,500원'], ['소득세·지방소득세', '− 38,000원']], sum: ['실수령액', '2,219,070원'], note: '※ 학습용 예시 금액이에요. 실제 공제액은 연도·회사·가족 수에 따라 달라요.' },
+    q: '명세서에서 실제로 하루의 통장에 들어온 돈은 어느 줄일까요?', opts: ['지급 합계 2,500,000원', '실수령액 2,219,070원', '국민연금 118,750원'], a: 1,
+    exp: '세금과 [[4대보험]] 보험료를 떼고 남은 [[실수령액]]이 통장에 들어와요. 계약서의 250만 원은 [[세전]] 금액이에요.', hint: '"실제로 받는다"는 뜻의 줄을 찾아보세요.' },
+  { t: 'talk', lines: [['h', '국민연금? 내 돈을 왜 가져가는 거야?'], ['d', '좋은 질문! 지금 낸 돈을 나중에 나이가 들었을 때 돌려받는 거야. 마지막 5장에서 비밀을 알려 줄게.', 'happy'], ['d', '지금은 이것만 기억해. 계약서 금액은 [[세전]], 통장에 들어오는 돈은 [[실수령액]]!']] },
+  { t: 'ox', q: '연봉 3,000만 원이면, 매달 통장에 정확히 250만 원씩 들어온다.', a: false,
+    exp: '연봉을 12로 나눈 250만 원은 [[세전]] 금액이에요. 세금과 보험료를 떼면 통장에는 그보다 적게 들어와요.', hint: '방금 본 하루의 통장을 떠올려 보세요.' },
+  { t: 'say', q: '하루는 뭐라고 할까?', lines: [['d', '이번 달 생활비 계획을 세워 볼까? 기준을 뭘로 잡을래?', 'think']], opts: ['"계약서에 적힌 250만 원!"', '"실제로 들어온 222만 원!"'], a: 1,
+    exp: '실제로 쓸 수 있는 돈은 [[실수령액]]이에요. 250만 원을 기준으로 계획하면 매달 28만 원씩 모자라요!', hint: '통장에 실제로 있는 돈은 얼마였나요?' },
+  { t: 'blank', q: '세금과 보험료를 떼고 실제로 받는 돈 = ___', opts: ['실수령액', '세전', '원금'], a: 0,
+    exp: '[[실수령액]]이에요. "실제로 수령하는 금액"이라는 뜻이에요.', hint: '"실제로 받는다"는 말이 들어 있어요.' },
+  { t: 'order', q: '월급이 통장에 들어오기까지, 순서대로 눌러 봐!', items: ['계약서의 세전 월급', '세금·보험료 떼기', '통장에 실수령액 입금'],
+    exp: '[[세전]] 월급에서 세금과 [[4대보험]] 보험료를 뗀 [[실수령액]]이 통장에 들어와요.', hint: '계약서 금액이 출발점이에요.' }
+]},
+'1-2': { ch: 1, icon: '🗂️', title: '돈에 이름표 붙이기', sub: '고정비, 변동비, 비상금', steps: [
+  { t: 'talk', lines: [['h', '222만 원… 그런데 정신 차려 보니 벌써 반이 없어졌어.'], ['d', '돈이 어디로 가는지부터 나눠 보자. 돈에 이름표를 붙이는 거야!', 'think'], ['d', '월세처럼 매달 거의 같은 돈이 나가면 [[고정비]], 외식비처럼 달마다 달라지면 [[변동비]]야.']] },
+  { t: 'choice', q: '매달 25일에 나가는 월세 50만 원은?', opts: ['고정비', '변동비'], a: 0,
+    exp: '매달 같은 금액이 나가니까 [[고정비]]예요. 휴대폰 요금, 교통 정기권도 여기에 들어가요.', hint: '매달 금액이 바뀌나요?' },
+  { t: 'choice', q: '친구들과 주말에 먹은 외식비는?', opts: ['고정비', '변동비'], a: 1,
+    exp: '달마다 금액이 달라지니까 [[변동비]]예요. 아끼기 쉬운 쪽도 보통 변동비예요.', hint: '이번 달과 다음 달 금액이 같을까요?' },
+  { t: 'talk', lines: [['n', '그 주 금요일, 하루의 휴대폰 화면이 깨졌다.'], ['h', '수리비 20만 원?! 이번 달 돈이 없는데…', ''], ['d', '이럴 때를 위해 따로 모아 두는 돈을 [[비상금]]이라고 해. 생활비 3~6개월치를 목표로 모으라고 많이 권해.', 'think']] },
+  { t: 'choice', q: '비상금은 어디에 두는 게 좋을까요?', opts: ['언제든 바로 꺼낼 수 있는 통장', '10년 동안 못 찾는 상품', '지갑 속 현금으로 전부'], a: 0,
+    exp: '비상금은 급할 때 바로 써야 하니까 쉽게 꺼낼 수 있어야 해요. 다만 평소 쓰는 통장과는 나눠 두면 덜 쓰게 돼요.', hint: '"갑자기" 필요한 돈이에요.' },
+  { t: 'ox', q: '쓰고 남은 돈을 저축하는 것보다, 월급날 저축할 돈을 먼저 떼어 두는 편이 모으기 쉽다.', a: true,
+    exp: '먼저 떼어 두면 남은 돈 안에서 쓰게 되니까 저축이 밀리지 않아요. 자동이체를 걸어 두면 더 쉬워요.', hint: '쓰고 나면 남는 돈이 있던가요?' }
+]},
+'1-3': { ch: 1, icon: '🏦', title: '은행이 주는 사용료', sub: '원금, 이자, 금리', steps: [
+  { t: 'talk', lines: [['n', '하루는 첫 달에 아낀 100만 원을 은행에 맡기기로 했다.'], ['h', '그냥 통장에 두는 거랑 뭐가 달라?'], ['d', '은행은 하루의 돈을 잠깐 빌려 쓰고, 그 대가로 [[이자]]를 줘. 일종의 사용료지!', 'happy'], ['d', '처음 맡긴 100만 원은 [[원금]], 이자가 몇 %인지는 [[금리]]라고 해.']] },
+  { t: 'choice', q: '100만 원을 금리 연 3%로 1년 맡기면 이자는?', opts: ['3천 원', '3만 원', '30만 원'], a: 1,
+    exp: '100만 원의 3%는 3만 원이에요. [[원금]] × [[금리]] = 1년 이자!', hint: '100만 원의 1%는 1만 원이에요.' },
+  { t: 'ox', q: '금리 "연 3%"는 한 달마다 3%씩 준다는 뜻이다.', a: false,
+    exp: '"연"은 1년이라는 뜻이에요. 1년 동안 맡겨야 3%를 받아요.', hint: '"연봉"의 "연"과 같은 뜻이에요.' },
+  { t: 'choice', q: '200만 원을 연 3%로 1년 맡기면 이자는?', opts: ['3만 원', '6만 원', '9만 원'], a: 1,
+    exp: '맡긴 돈이 두 배면 이자도 두 배! 200만 원 × 3% = 6만 원이에요.', hint: '100만 원일 때 3만 원이었어요.' },
+  { t: 'blank', q: '1년 이자 = 원금 × ___', opts: ['금리', '월급', '만기'], a: 0,
+    exp: '[[원금]]에 [[금리]]를 곱하면 1년 이자가 나와요. 이 식 하나로 2장까지 갈 수 있어요!', hint: '%로 표시되는 것을 고르세요.' },
+  { t: 'match', pairs: [['실수령액', '세금 떼고 통장에 들어오는 돈'], ['고정비', '매달 거의 같은 금액이 나가는 돈'], ['비상금', '예상 못 한 일에 쓰려고 모아 둔 돈'], ['금리', '이자가 몇 %인지 나타낸 비율']],
+    exp: '1장에서 만난 용어를 모두 연결했어요. 헷갈리면 용어장에서 다시 볼 수 있어요.', hint: '확실히 아는 짝부터 먼저 맞춰 보세요.' },
+  { t: 'talk', lines: [['d', '1장 끝! 하루는 이제 월급 명세서를 읽고, 돈에 이름표를 붙이고, 이자 계산까지 할 수 있어.', 'cheer'], ['h', '다음 달엔 돈을 어디에 맡길지 정해 볼래!']] }
+]},
+'2-1': { ch: 2, icon: '🐷', title: '예금일까, 적금일까', sub: '목돈과 나눠 넣기', steps: [
+  { t: 'talk', lines: [['n', '4월, 점심시간. 입사 동기 지호가 말을 걸었다.'], ['j', '하루야, 나 매달 30만 원씩 적금 들었다?'], ['h', '나는 모아 둔 100만 원이 있는데… 나도 적금이야?'], ['d', '한 번에 목돈을 맡기면 [[예금]], 매달 나눠 넣으면 [[적금]]이야.', 'think']] },
+  { t: 'say', q: '하루는 뭐라고 할까?', lines: [['j', '하루야, 그래서 넌 모아 둔 100만 원 어떻게 할 거야?']], opts: ['"한 번에 맡기는 예금에 넣을래!"', '"매달 나눠 넣는 적금에 넣을래!"'], a: 0,
+    exp: '목돈을 한 번에 맡기는 건 [[예금]]이에요.', hint: '한 번에? 나눠서?' },
+  { t: 'choice', q: '지호처럼 월급날마다 30만 원씩 넣으려면?', opts: ['예금', '적금'], a: 1,
+    exp: '매달 나눠 넣는 건 [[적금]]이에요. 목돈이 아직 없을 때 모으기 좋아요.', hint: '"매달"이 핵심이에요.' },
+  { t: 'talk', lines: [['d', '약속한 기간이 끝나는 날을 [[만기]]라고 해. 만기가 되면 원금과 이자를 같이 돌려받아.'], ['d', '그런데 만기 전에 깨면 [[중도해지]]라서 이자가 확 줄어들어.', 'oops']] },
+  { t: 'ox', q: '만기 전에 깨도 약속한 이자를 그대로 받는다.', a: false,
+    exp: '[[중도해지]]를 하면 보통 약속보다 훨씬 낮은 이자를 받아요. 그래도 넣은 원금은 돌려받아요.', hint: '다람이 표정이 어땠나요?' },
+  { t: 'choice', q: '하루가 비상금까지 전부 1년짜리 예금에 넣으면 생길 수 있는 문제는?', opts: ['급한 일이 생기면 깨야 해서 이자가 줄어든다', '이자가 두 배가 된다', '아무 문제 없다'], a: 0,
+    exp: '휴대폰이 또 깨지면 예금을 깨야겠죠? 비상금은 따로, 오래 둘 돈만 예금에 넣는 게 좋아요.', hint: '1장에서 배운 비상금을 떠올려 보세요.' }
+]},
+'2-2': { ch: 2, icon: '🧾', title: '적금 이자, 생각보다 적네?', sub: '적금 이자와 세금', steps: [
+  { t: 'talk', lines: [['j', '연 5% 적금에 매달 50만 원씩 1년 넣으면 600만 원이잖아. 600만 원의 5%니까 이자 30만 원!'], ['h', '와, 30만 원이면 꽤 크다!'], ['d', '음… 정말 그럴까? 첫 달에 넣은 돈은 12달 동안 은행에 있지만, 마지막 달에 넣은 돈은 겨우 1달이야.', 'think']] },
+  { t: 'choice', q: '그렇다면 실제 이자는 30만 원과 비교해 어떨까요?', opts: ['30만 원보다 많다', '딱 30만 원이다', '30만 원의 절반 정도다'], a: 2,
+    exp: '돈이 평균적으로 절반 정도의 기간만 맡겨지는 셈이라, 이자도 30만 원의 절반 남짓이에요.', hint: '마지막 달에 넣은 돈은 1달만 맡겨져요.' },
+  { t: 'slide', sim: 'savings', preset: { m: 50, r: 5, n: 12, tax: 15.4 }, task: '시뮬레이션에서 "실제 세전 이자" 막대를 확인해 보세요.',
+    q: '매달 50만 원, 연 5%, 12개월 적금의 세전 이자는 약 얼마일까요?', opts: ['약 16만 원', '약 30만 원', '약 60만 원'], a: 0,
+    exp: '정확히는 162,500원이에요. 지호가 말한 30만 원의 절반을 조금 넘어요.', hint: '가운데 막대 위 숫자를 보세요.' },
+  { t: 'talk', lines: [['d', '하나 더! 이자에는 세금이 붙어. 일반적으로 이자의 15.4%를 [[이자소득세]]로 떼.', 'think'], ['d', '세금 떼기 전은 [[세전]], 뗀 뒤는 [[세후]]. 그래서 지호가 실제로 받는 이자는 약 13.7만 원이야.'], ['j', '30만 원인 줄 알았는데… 반도 안 되네!']] },
+  { t: 'ox', q: '통장에 실제로 들어오는 이자는 세후 이자다.', a: true,
+    exp: '세금을 뗀 [[세후]] 이자가 들어와요. 안내문의 금리는 보통 [[세전]] 기준이에요.', hint: '"후"는 "뒤"라는 뜻이에요.' },
+  { t: 'choice', q: '적금 광고의 금리를 볼 때 알맞은 태도는?', opts: ['넣은 돈 전체 × 금리만큼 이자를 받는다고 생각한다', '실제 이자는 더 적고, 세금도 뗀다는 걸 기억한다'], a: 1,
+    exp: '적금은 매달 넣은 돈의 기간이 달라 이자가 생각보다 적고, 거기서 세금도 빠져요. 시뮬레이션 탭의 적금 계산기로 내 숫자를 넣어 볼 수 있어요.', hint: '방금 계산해 본 결과를 떠올려 보세요.' }
+]},
+'2-3': { ch: 2, icon: '📈', title: '이자에 이자가 붙는다면', sub: '단리와 복리', steps: [
+  { t: 'talk', lines: [['h', '다람아, 은행에 오래 맡기면 이자가 계속 똑같이 붙어?'], ['d', '계산 방식에 따라 달라! 1,000만 원을 연 5%로 맡기면 1년 뒤 이자는 50만 원이지?', 'think'], ['d', '2년째에 처음 1,000만 원에만 이자를 붙이면 [[단리]], 1,050만 원 전체에 붙이면 [[복리]]야.']] },
+  { t: 'choice', q: '복리라면 2년째에 붙는 이자는?', opts: ['50만 원', '52.5만 원', '100만 원'], a: 1,
+    exp: '1,050만 원의 5%라서 52.5만 원이에요. 이자에도 이자가 붙었어요!', hint: '1,050만 원에 5%를 붙여 보세요.' },
+  { t: 'slide', sim: 'compound', preset: { p: 1000, r: 5, y: 30 }, task: '기간 슬라이더를 1년에서 30년까지 천천히 움직여 보세요.',
+    q: '30년 뒤, 복리로 불린 돈은 단리의 약 몇 배일까요?', opts: ['약 1.1배', '약 1.7배', '약 10배'], a: 1,
+    exp: '단리 2,500만 원, 복리 약 4,322만 원으로 약 1.7배예요. 처음엔 비슷하다가 갈수록 벌어지죠?', hint: '그래프 아래 두 숫자를 비교해 보세요.' },
+  { t: 'ox', q: '복리의 힘은 기간이 길수록 커진다.', a: true,
+    exp: '불어난 돈에 다시 이자가 붙으니까, 오래 둘수록 차이가 크게 벌어져요.', hint: '그래프의 두 선 사이 간격을 떠올려 보세요.' },
+  { t: 'match', pairs: [['예금', '목돈을 한 번에 맡기기'], ['적금', '매달 나눠 넣기'], ['세후', '세금을 뗀 뒤의 금액'], ['복리', '이자에도 이자가 붙는 방식']],
+    exp: '2장의 핵심 용어 네 개예요. 도전 미션 전에 정리해 두면 좋아요.', hint: '확실히 아는 짝부터 먼저 맞춰 보세요.' },
+  { t: 'talk', lines: [['h', '그럼 일찍 시작할수록 유리하겠네!'], ['d', '바로 그거야! 이 원리는 5장 연금에서 다시 만날 거야. 기억해 둬!', 'cheer']] }
+]},
+'2-4': { ch: 2, icon: '🏆', mission: true, title: '도전! 최고 금리의 비밀', sub: '우대금리 안내문 읽기', steps: [
+  { t: 'talk', lines: [['n', '5월, 하루는 예시은행 앱에서 "최고 연 4.5%!" 광고를 보았다.'], ['h', '4.5%면 엄청 높다! 바로 가입할래!'], ['d', '잠깐! 광고의 큰 숫자보다 안내문의 작은 글씨가 중요해. 같이 읽어 보자.', 'think']] },
+  { t: 'notice', doc: { bank: '예시은행', title: '예시 첫월급 적금 상품 안내', rows: [['납입 금액', '월 1만 원 ~ 50만 원'], ['가입 기간', '12개월'], ['기본금리', '연 2.5% (세전)'], ['우대금리', '최대 연 2.0%p<br>· 급여이체: 1.0%p<br>· 카드 사용 실적: 0.5%p<br>· 마케팅 정보 수신 동의: 0.5%p']], note: '※ 학습용 가상 상품입니다.' },
+    q: '하루는 <b>급여이체만</b> 할 수 있어요. 하루가 받는 금리는?', opts: ['연 2.5%', '연 3.5%', '연 4.5%'], a: 1,
+    exp: '[[기본금리]] 2.5%에 급여이체 [[우대금리]] 1.0%p를 더해 연 3.5%예요.', hint: '기본금리에 급여이체 줄의 숫자만 더해 보세요.' },
+  { t: 'choice', q: '광고의 "최고 연 4.5%"를 받으려면?', opts: ['가입만 하면 누구나 받는다', '우대 조건 세 가지를 모두 채워야 한다', '50만 원을 넣으면 받는다'], a: 1,
+    exp: '2.5% + 1.0%p + 0.5%p + 0.5%p = 4.5%. 최고 금리는 조건을 전부 채운 사람의 숫자예요.', hint: '2.5%에서 4.5%가 되려면 몇 %p가 필요할까요?' },
+  { t: 'ox', q: '광고의 "최고 금리"는 누구나 받는 금리다.', a: false,
+    exp: '누구나 받는 건 [[기본금리]]예요. 최고 금리는 모든 [[우대금리]] 조건을 채웠을 때만 받아요.', hint: '조건 없이 받는 금리를 뭐라고 불렀나요?' },
+  { t: 'choice', q: '적금에 가입하기 전 하루가 꼭 확인할 것은?', opts: ['내가 실제로 채울 수 있는 우대 조건', '앱 화면이 예쁜지', '광고 모델이 누구인지'], a: 0,
+    exp: '내가 채울 수 있는 조건으로 받을 금리를 직접 계산해 보는 게 핵심이에요. 2장 클리어!', hint: '이번 미션에서 계산한 것을 떠올려 보세요.' }
+]},
+'3-1': { ch: 3, icon: '🏠', title: '보증금이 모자라!', sub: '대출과 이자, 고정·변동금리', steps: [
+  { t: 'talk', lines: [['n', '6월, 하루는 회사 근처로 첫 자취방을 구했다. 그런데 보증금이 300만 원 모자란다.'], ['h', '은행에서 빌릴 수 있을까?'], ['d', '은행에서 돈을 빌리는 걸 [[대출]]이라고 해. 이번엔 반대로 하루가 이자를 내야 해!', 'think']] },
+  { t: 'choice', q: '300만 원을 연 6%로 1년 빌리면, 1년 이자는?', opts: ['6천 원', '18만 원', '60만 원'], a: 1,
+    exp: '300만 원 × 6% = 18만 원이에요. 맡길 때와 계산식은 똑같고, 방향만 반대예요.', hint: '1장의 "원금 × 금리"를 그대로 써 보세요.' },
+  { t: 'say', q: '하루는 뭐라고 할까?', lines: [['d', '은행 두 곳이 300만 원을 빌려준대. 하루라면 어디서 빌릴래?', 'think']], opts: ['"연 5%인 곳에서 빌릴래!"', '"연 7%인 곳에서 빌릴래!"'], a: 0,
+    exp: '빌릴 때는 금리가 낮을수록 이자를 덜 내요. 5%면 15만 원, 7%면 21만 원이에요.', hint: '이번엔 하루가 이자를 "내는" 쪽이에요.' },
+  { t: 'talk', lines: [['d', '대출 금리는 두 종류가 있어. 기간 내내 그대로면 [[고정금리]], 시장 상황에 따라 바뀌면 [[변동금리]].'], ['h', '바뀐다고? 그럼 오를 수도 있어?'], ['d', '응. 오를 수도, 내릴 수도 있어.', 'think']] },
+  { t: 'ox', q: '변동금리로 빌렸는데 시장 금리가 오르면, 이자 부담도 커질 수 있다.', a: true,
+    exp: '[[변동금리]]는 시장을 따라 움직여요. 반대로 금리가 내리면 부담이 줄 수도 있어요.', hint: '"변동"은 바뀐다는 뜻이에요.' },
+  { t: 'blank', q: '빌리는 동안 금리가 바뀌지 않으면 ___금리', opts: ['고정', '변동', '우대'], a: 0,
+    exp: '[[고정금리]]예요. 매달 낼 이자를 미리 알 수 있는 게 장점이에요.', hint: '"움직이지 않는다"는 뜻의 말이에요.' }
+]},
+'3-2': { ch: 3, icon: '💳', title: '신용카드는 공짜 돈?', sub: '신용카드, 체크카드, 할부', steps: [
+  { t: 'talk', lines: [['n', '7월, 이사 선물로 노트북을 사려는 하루.'], ['j', '신용카드로 긁어! 이번 달엔 돈이 하나도 안 나가!'], ['d', '잠깐! [[신용카드]]는 카드회사가 먼저 내 주고, 다음 달에 하루가 한꺼번에 갚는 거야. 결국 빌려 쓰는 돈이지.', 'oops'], ['d', '[[체크카드]]는 쓰는 순간 내 통장에서 바로 돈이 빠져나가.']] },
+  { t: 'ox', q: '신용카드로 쓴 돈은 다음 달에 갚아야 하는 돈이다.', a: true,
+    exp: '그래서 신용카드를 쓸 때는 "다음 달의 나"가 낼 수 있는지 생각해야 해요.', hint: '카드회사가 "먼저" 내 준다고 했어요.' },
+  { t: 'say', q: '하루는 뭐라고 할까?', lines: [['j', '그럼 넌 어떤 카드 쓸 건데?']], opts: ['"통장에 있는 만큼만 쓰는 체크카드!"', '"다음 달에 갚는 신용카드!"'], a: 0,
+    exp: '[[체크카드]]는 통장 잔액을 넘어서 쓸 수 없어서 과소비를 막기 좋아요.', hint: '바로 통장에서 빠져나가는 카드예요.' },
+  { t: 'talk', lines: [['j', '그럼 노트북 120만 원을 12개월 [[할부]]로 하면? 한 달에 10만 원씩!'], ['d', '무이자 행사가 아니면 할부에는 수수료가 붙어. 매달 10만 원보다 더 내게 될 수 있어.', 'think']] },
+  { t: 'choice', q: '무이자가 아닌 12개월 할부로 120만 원 노트북을 사면?', opts: ['매달 딱 10만 원씩 낸다', '수수료가 붙어 120만 원보다 더 내게 된다', '할부로 사면 값이 깎인다'], a: 1,
+    exp: '[[할부]] 수수료 때문에 전체로는 120만 원보다 더 내요. 무이자인지 꼭 확인하세요.', hint: '다람이가 뭐가 붙는다고 했나요?' },
+  { t: 'choice', q: '카드값을 결제일에 못 내면 어떻게 될까요?', opts: ['아무 일도 없다', '연체가 되어 신용점수가 떨어질 수 있다', '다음 달 카드값이 줄어든다'], a: 1,
+    exp: '갚기로 한 날을 넘기면 [[연체]]예요. 다음 레슨에서 배울 [[신용점수]]에 나쁜 영향을 줘요.', hint: '약속한 날짜를 넘긴 거예요.' },
+  { t: 'order', q: '신용카드를 쓰고 제때 갚지 못하면? 일어나는 순서대로 눌러 봐!', items: ['신용카드로 결제', '다음 달 결제일', '못 내면 연체', '신용점수 하락'],
+    exp: '[[신용카드]]로 쓴 돈은 다음 달에 갚아야 하고, 못 내면 [[연체]]가 되어 [[신용점수]]가 떨어질 수 있어요.', hint: '카드를 쓰는 것부터 시작해요.' }
+]},
+'3-3': { ch: 3, icon: '📊', title: '나의 금융 성적표', sub: '신용점수와 연체', steps: [
+  { t: 'talk', lines: [['j', '이상하다? 하루랑 나랑 같은 은행, 같은 금액인데 대출 금리가 달라.'], ['d', '은행은 빌려준 돈을 잘 돌려받을 수 있을지 따져. 그걸 점수로 나타낸 게 [[신용점수]]야. 1~1000점이야.', 'think'], ['d', '약속을 잘 지켜 온 사람일수록 점수가 높아.']] },
+  { t: 'choice', q: '신용점수에 가장 나쁜 행동은?', opts: ['카드값이나 대출 이자를 연체하기', '내 신용점수를 조회해 보기', '체크카드를 꾸준히 쓰기'], a: 0,
+    exp: '[[연체]]는 신용점수를 떨어뜨리는 가장 큰 원인이에요.', hint: '"약속을 어기는" 행동을 고르세요.' },
+  { t: 'ox', q: '내 신용점수를 직접 조회하면 점수가 떨어진다.', a: false,
+    exp: '내 점수를 직접 확인하는 건 점수에 영향을 주지 않아요. 자주 확인해도 괜찮아요.', hint: '확인만 하는 건 약속을 어긴 걸까요?' },
+  { t: 'choice', q: '신용점수가 높으면 대출받을 때 일반적으로?', opts: ['더 낮은 금리로 빌릴 가능성이 크다', '대출을 받을 수 없다', '이자를 안 내도 된다'], a: 0,
+    exp: '은행 입장에서 돈을 떼일 걱정이 적으니 더 좋은 조건을 줄 가능성이 커요.', hint: '은행이 믿을 만한 사람에게 어떤 조건을 줄까요?' },
+  { t: 'choice', q: '하루의 습관 중 신용점수 관리에 좋은 것은?', opts: ['휴대폰 요금·카드값을 자동이체로 제때 내기', '카드 한도를 꽉 채워 쓰기', '소액 연체는 신경 쓰지 않기'], a: 0,
+    exp: '작은 금액이라도 제때 내는 습관이 가장 중요해요. 적은 금액의 [[연체]]도 기록에 남을 수 있어요.', hint: '연체와 반대되는 행동을 찾아보세요.' },
+  { t: 'match', pairs: [['대출', '은행에서 돈을 빌리는 것'], ['체크카드', '통장에서 바로 빠져나가는 카드'], ['연체', '갚을 날짜를 넘기는 것'], ['신용점수', '잘 갚을 사람인지 나타낸 점수']],
+    exp: '3장의 핵심 용어 네 개예요. 다음은 대출 두 개를 직접 비교하는 도전 미션!', hint: '확실히 아는 짝부터 먼저 맞춰 보세요.' }
+]},
+'3-4': { ch: 3, icon: '🏆', mission: true, title: '도전! 대출 두 개 비교', sub: '금리가 낮으면 무조건 좋을까', steps: [
+  { t: 'talk', lines: [['n', '8월, 더 넓은 방으로 옮기려는 하루. 1,000만 원을 3년 동안 빌리려 한다.'], ['h', '예시은행에서 두 가지를 안내받았어. B가 금리가 더 낮으니까 B지!'], ['d', '금리만 보면 그렇지. 그런데 갚는 방법도 같이 봐야 해!', 'think']] },
+  { t: 'notice', doc: { bank: '예시은행', title: '대출 상품 비교', cols: ['', 'A대출', 'B대출'], rows: [['빌리는 돈', '1,000만 원', '1,000만 원'], ['금리', '연 5.0% (고정)', '연 4.5% (고정)'], ['기간', '3년', '3년'], ['갚는 방법', '매달 같은 금액씩 원금과 이자를 함께', '매달 이자만, 3년 뒤 1,000만 원 한 번에']], note: '※ 학습용 가상 상품입니다.' },
+    q: '<b>금리만</b> 보면 어느 쪽이 낮을까요?', opts: ['A대출', 'B대출'], a: 1,
+    exp: 'B대출이 0.5%p 낮아요. 하지만 이야기는 여기서 끝이 아니에요.', hint: '두 금리 숫자만 비교해 보세요.' },
+  { t: 'talk', lines: [['d', 'A는 매달 빚을 조금씩 갚아 나가서, 이자가 붙는 돈이 점점 줄어.'], ['d', 'B는 3년 내내 1,000만 원 전체에 이자가 붙어. 계산해 보면 A의 [[총이자]]는 약 79만 원, B는 135만 원이야!', 'oops']] },
+  { t: 'choice', q: '3년 동안 낸 이자를 모두 더하면 더 적은 쪽은?', opts: ['A대출 (약 79만 원)', 'B대출 (135만 원)'], a: 0,
+    exp: 'A는 빚이 매달 줄어드니까 [[총이자]]가 더 적어요. 금리가 높은데도요!', hint: '이자는 "남은 빚"에 붙어요.' },
+  { t: 'choice', q: '그렇다면 A대출의 단점은?', opts: ['매달 약 30만 원씩 내야 해서 부담이 크다', '금리가 중간에 바뀐다', '이자가 더 많다'], a: 0,
+    exp: 'A는 매달 약 30만 원, B는 매달 이자 37,500원만 내요. 월급으로 감당할 수 있는지도 꼭 따져야 해요.', hint: 'A는 매달 원금까지 함께 갚아요.' },
+  { t: 'ox', q: '금리가 낮은 대출이 항상 총이자도 적다.', a: false,
+    exp: '갚는 방법에 따라 달라요. 금리, [[총이자]], 매달 낼 돈을 함께 비교하는 게 정답이에요. 3장 클리어!', hint: '이번 미션의 결과를 떠올려 보세요.' }
+]},
+'4-1': { ch: 4, icon: '🛒', title: '김밥값이 또 올랐어', sub: '물가와 구매력', steps: [
+  { t: 'talk', lines: [['n', '9월, 점심시간. 하루가 김밥집 메뉴판을 본다.'], ['h', '작년엔 4,000원이었는데 4,200원이 됐네?'], ['d', '물건값이 전반적으로 오르면 "[[물가]]가 올랐다"고 해. 1년에 몇 % 올랐는지는 [[물가상승률]]이야.', 'think']] },
+  { t: 'choice', q: '4,000원짜리 김밥이 5% 오르면?', opts: ['4,050원', '4,200원', '5,000원'], a: 1,
+    exp: '4,000원의 5%는 200원. 그래서 4,200원이에요.', hint: '4,000원의 1%는 40원이에요.' },
+  { t: 'talk', lines: [['d', '물가가 오르면, 같은 돈으로 살 수 있는 양이 줄어. 이걸 [[구매력]]이 줄었다고 해.'], ['h', '1만 원으로 김밥 두 줄 사고 거스름돈이 2,000원 남았는데, 이제 1,600원이네…']] },
+  { t: 'ox', q: '물가가 오르면 같은 1만 원으로 살 수 있는 김밥 수는 줄어들 수 있다.', a: true,
+    exp: '돈의 숫자는 그대로여도 [[구매력]]은 줄어요.', hint: '김밥 한 줄 값이 올랐어요.' },
+  { t: 'say', q: '하루는 뭐라고 할까?', lines: [['j', '하루야, 월급 3% 올랐다며? 이제 여유 있겠다!']], opts: ['"응, 확실히 넉넉해졌어!"', '"아니, 물가가 5% 올라서 오히려 빠듯해."', '"똑같아, 달라진 게 없어."'], a: 1,
+    exp: '월급보다 물가가 더 빨리 올랐으니, 월급으로 살 수 있는 양은 오히려 줄었어요.', hint: '3%와 5% 중 무엇이 더 큰가요?' }
+]},
+'4-2': { ch: 4, icon: '🗄️', title: '서랍 속 100만 원', sub: '시간이 지나면 줄어드는 돈의 가치', steps: [
+  { t: 'talk', lines: [['h', '은행 말고 서랍에 현금 100만 원을 넣어 두면 제일 안전하지 않아?'], ['d', '도둑맞을 걱정은 줄겠지만, 물가가 몰래 조금씩 가져가.', 'oops'], ['d', '물건값이 계속 오르는 현상을 [[인플레이션]]이라고 해. 직접 확인해 보자!', 'think']] },
+  { t: 'slide', sim: 'purchase', preset: { p: 100, i: 3, y: 20 }, task: '기간 슬라이더를 움직이며 선이 내려가는 걸 보세요.',
+    q: '물가가 매년 3%씩 오르면, 20년 뒤 100만 원의 가치는 지금 돈으로 약 얼마일까요?', opts: ['약 97만 원', '약 55만 원', '약 10만 원'], a: 1,
+    exp: '약 55.4만 원이에요. 1년에 3%는 작아 보여도, 20년 동안 쌓이면 거의 절반이 돼요.', hint: '그래프 아래 "20년 뒤 실제 가치"를 보세요.' },
+  { t: 'ox', q: '물가가 매년 조금씩만 올라도, 오랜 시간이 지나면 구매력이 크게 줄어든다.', a: true,
+    exp: '복리처럼 해마다 겹쳐서 오르기 때문이에요. 그래서 오래 둘 돈일수록 물가를 생각해야 해요.', hint: '방금 본 그래프를 떠올려 보세요.' },
+  { t: 'choice', q: '물가가 매년 3%가 아니라 2%씩 오른다면, 20년 뒤 100만 원의 가치는?', opts: ['55만 원보다 더 많이 남는다', '55만 원보다 더 적게 남는다', '똑같다'], a: 0,
+    exp: '물가가 덜 오를수록 돈의 가치도 덜 줄어요. 2%면 약 67만 원이 남아요. 시뮬레이션 탭에서 직접 바꿔 볼 수 있어요.', hint: '물가가 "덜" 오르면 돈이 덜 깎여요.' },
+  { t: 'choice', q: '현금을 오랫동안 서랍에만 두면?', opts: ['숫자는 그대로라 아무 손해가 없다', '물가가 오르는 만큼 살 수 있는 양이 줄어든다', '물가가 오르면 현금 가치도 함께 오른다'], a: 1,
+    exp: '돈의 숫자는 그대로여도 [[인플레이션]] 때문에 [[구매력]]이 줄어요. 그럼 은행에 맡기면 해결될까요? 다음 레슨에서!', hint: '"물가가 몰래 가져간다"고 했어요.' }
+]},
+'4-3': { ch: 4, icon: '⚖️', title: '이자가 붙었는데 제자리?', sub: '명목금리와 실질금리', steps: [
+  { t: 'talk', lines: [['d', '100만 원을 연 3%로 맡겨서 1년 뒤 103만 원이 됐어. 그런데 그동안 물가도 3% 올랐다면?', 'think'], ['h', '작년에 100만 원짜리 물건이 이제 103만 원이니까… 제자리네?!'], ['d', '정답! 안내문에 적힌 금리는 [[명목금리]], 물가가 오른 만큼 뺀 진짜 늘어난 비율은 [[실질금리]]야.', 'happy']] },
+  { t: 'choice', q: '금리 연 4%, 물가상승률 1%라면 실질금리는 약?', opts: ['약 5%', '약 3%', '약 1%'], a: 1,
+    exp: '4% − 1% = 약 3%. [[실질금리]]는 대략 금리에서 [[물가상승률]]을 빼면 돼요.', hint: '빼기 한 번이면 돼요.' },
+  { t: 'ox', q: '예금 금리가 2%인데 물가가 3% 올랐다면, 그 돈으로 살 수 있는 양은 줄었다.', a: true,
+    exp: '2% − 3% = 약 −1%. 통장 숫자는 늘었지만 [[구매력]]은 오히려 줄었어요.', hint: '실질금리가 플러스일까요, 마이너스일까요?' },
+  { t: 'blank', q: '실질금리 ≈ 명목금리 − ___', opts: ['물가상승률', '세율', '우대금리'], a: 0,
+    exp: '물가가 오른 만큼 돈의 가치가 깎이니까 [[물가상승률]]을 빼요.', hint: '돈의 가치를 깎아 먹는 것은?' },
+  { t: 'choice', q: '예금 금리를 비교할 때 하루가 함께 봐야 할 것은?', opts: ['물가상승률', '은행 로고 색깔', '광고 모델'], a: 0,
+    exp: '금리 숫자만 보지 말고 [[물가상승률]]과 함께 봐야 내 돈이 실제로 얼마나 불어나는지 알 수 있어요.', hint: '이번 레슨의 핵심 식을 떠올려 보세요.' },
+  { t: 'match', pairs: [['물가', '물건값의 평균 수준'], ['구매력', '같은 돈으로 살 수 있는 양'], ['명목금리', '안내문에 적힌 금리 그대로'], ['실질금리', '물가를 뺀 진짜 늘어난 비율']],
+    exp: '4장 클리어! 금리 숫자와 물가를 함께 보는 눈이 생겼어요.', hint: '확실히 아는 짝부터 먼저 맞춰 보세요.' }
+]},
+'5-1': { ch: 5, icon: '👵', title: '국민연금의 정체', sub: '월급에서 빠지는 이유', steps: [
+  { t: 'talk', lines: [['n', '11월, 하루는 첫 월급 명세서를 다시 꺼내 보았다.'], ['h', '다람아, 이제 약속한 국민연금 비밀 알려 줘!'], ['d', '좋아! [[국민연금]]은 일하는 동안 조금씩 보험료를 내고, 나이가 들어 일을 그만둔 뒤 매달 돌려받는 나라 연금이야.', 'happy']] },
+  { t: 'choice', q: '국민연금은 주로 언제 받을까요?', opts: ['입사 1년 뒤', '나이가 들어 일을 그만둔 뒤', '회사를 옮길 때마다'], a: 1,
+    exp: '지금 낸 보험료를 바탕으로, 나이가 들었을 때 매달 연금으로 받아요.', hint: '"노후 준비"의 장이에요.' },
+  { t: 'talk', lines: [['d', '직장인은 보험료를 회사와 반씩 나눠 내. 2026년 기준 보험료율이 월급의 9.5%라서, 하루는 절반인 4.75%를 내.'], ['d', '이 비율은 2033년까지 해마다 0.5%p씩 올라 13%가 될 예정이야. 숫자는 바뀌니까 최신 기준은 꼭 직접 확인해!', 'think']] },
+  { t: 'choice', q: '월급 250만 원인 하루가 내는 국민연금 보험료는? (하루 부담 4.75%)', opts: ['약 5.9만 원', '약 11.9만 원', '약 23.8만 원'], a: 1,
+    exp: '250만 원 × 4.75% = 118,750원. 1장 월급 명세서의 국민연금 금액과 똑같죠? 회사도 같은 금액을 함께 내요.', hint: '1장 명세서의 국민연금 줄을 떠올려 보세요.' },
+  { t: 'ox', q: '직장인의 국민연금 보험료는 회사가 절반을 함께 낸다.', a: true,
+    exp: '직장인은 회사와 반씩 나눠 내요. 회사에 다니지 않는 사람은 보험료 전액을 스스로 내요.', hint: '"반씩 나눠 낸다"고 했어요.' },
+  { t: 'talk', lines: [['h', '그럼 나중에 얼마나 받아?'], ['d', '일할 때 벌던 돈과 비교해 연금이 몇 %인지를 [[소득대체율]]이라고 해. 2026년부터 가입한 기간에는 43%가 적용돼.', 'think'], ['d', '평균 월급으로 40년 동안 가입한 사람을 기준으로 한 숫자라서, 사람마다 실제로 받는 금액은 달라.']] },
+  { t: 'choice', q: '소득대체율 43%가 뜻하는 것에 가장 가까운 것은?', opts: ['일할 때 벌던 돈의 약 43%를 연금으로 받는다는 기준', '낸 돈의 43%만 돌려받는다', '43살부터 연금을 받는다'], a: 0,
+    exp: '[[소득대체율]]은 "벌던 돈 대비 연금"의 비율이에요. 40년 가입 기준이라, 가입 기간이 짧으면 더 적어요.', hint: '"소득을 대신한다"는 뜻이에요.' }
+]},
+'5-2': { ch: 5, icon: '🏡', title: '노후는 3층 집', sub: '국민연금, 퇴직연금, 개인연금', steps: [
+  { t: 'talk', lines: [['h', '벌던 돈의 43%면… 국민연금만으로 충분할까?'], ['d', '그래서 노후 준비를 3층 집에 비유하곤 해.', 'think'], ['d', '1층은 나라가 운영하는 [[국민연금]], 2층은 회사가 쌓아 주는 [[퇴직연금]], 3층은 내가 스스로 드는 [[개인연금]]!', 'happy']] },
+  { t: 'choice', q: '회사가 일하는 동안 쌓아 두었다가, 회사를 그만두거나 나이가 들면 받는 것은?', opts: ['국민연금', '퇴직연금', '개인연금'], a: 1,
+    exp: '[[퇴직연금]]은 2층이에요. 오래 일할수록 더 쌓여요.', hint: '"퇴직"할 때 받는 돈이에요.' },
+  { t: 'choice', q: '내가 스스로 골라서 가입하는 노후 준비는?', opts: ['국민연금', '퇴직연금', '개인연금'], a: 2,
+    exp: '[[개인연금]]은 3층이에요. 가입 여부와 금액을 스스로 정해요.', hint: '"개인"이 스스로 하는 거예요.' },
+  { t: 'blank', q: '1층 국민연금 → 2층 ___ → 3층 개인연금', opts: ['퇴직연금', '적금', '대출'], a: 0,
+    exp: '3층 집: 국민연금 → [[퇴직연금]] → [[개인연금]].', hint: '회사가 쌓아 주는 층이에요.' },
+  { t: 'ox', q: '1층 국민연금만으로는 일할 때와 같은 생활을 유지하기 어려울 수 있다.', a: true,
+    exp: '[[소득대체율]]이 43%라면 벌던 돈의 절반이 안 돼요. 그래서 2층, 3층을 함께 생각해요.', hint: '43%는 절반보다 많을까요, 적을까요?' },
+  { t: 'match', pairs: [['국민연금', '나라가 운영하는 1층'], ['퇴직연금', '회사가 쌓아 주는 2층'], ['개인연금', '내가 스스로 드는 3층'], ['소득대체율', '벌던 돈 대비 연금의 비율']],
+    exp: '노후 3층 집과 소득대체율까지 연결했어요.', hint: '확실히 아는 짝부터 먼저 맞춰 보세요.' },
+  { t: 'talk', lines: [['h', '그럼 어떤 개인연금이 제일 좋아?'], ['d', '그건 사람마다 달라서 내가 골라 줄 수는 없어. 대신 따져 볼 기준을 알려 줄게. 바로 다음 미션에서!', 'happy']] }
+]},
+'5-3': { ch: 5, icon: '🏆', mission: true, title: '도전! 25살 vs 35살', sub: '일찍 시작하는 힘', steps: [
+  { t: 'talk', lines: [['n', '12월, 송년회 자리에서 지호가 말했다.'], ['j', '노후 준비는 30대 중반부터 해도 충분하지 않아? 지금은 놀아야지!'], ['d', '직접 비교해 볼까? 매달 20만 원씩, 연 4%로 불어난다고 가정하고 60살까지 모아 보자.', 'think'], ['d', '참고로 4%는 계산을 위한 예시야. 실제 수익은 보장되지 않아.']] },
+  { t: 'slide', sim: 'pension', preset: { m: 20, r: 4, a: 25, e: 60 }, task: '시작 나이 슬라이더를 25살 → 35살로 움직여 보세요.',
+    q: '25살에 시작하면, 35살에 시작할 때보다 60살에 모인 돈이 약 얼마나 많을까요?', opts: ['약 2,400만 원', '약 8,000만 원', '약 3억 원'], a: 1,
+    exp: '25살 시작 약 1억 8,275만 원, 35살 시작 약 1억 283만 원으로 약 7,992만 원 차이예요. 더 넣은 돈은 2,400만 원(20만 원 × 120개월)뿐인데요!', hint: '그래프 아래 "차이"를 보세요.' },
+  { t: 'talk', lines: [['j', '10년 일찍 시작했을 뿐인데 8,000만 원 가까이 차이가 나?!'], ['d', '2장에서 배운 [[복리]] 기억나? 일찍 시작하면 이자가 이자를 낳는 시간이 길어져.', 'happy']] },
+  { t: 'ox', q: '일찍 시작하면 복리가 일할 시간이 길어진다.', a: true,
+    exp: '같은 금액이라도 오래 불릴수록 [[복리]] 효과가 커져요.', hint: '2장 그래프를 떠올려 보세요.' },
+  { t: 'choice', q: '이 미션에서 얻을 수 있는 판단 기준으로 가장 알맞은 것은?', opts: ['금액이 작아도 일찍 시작하는 것이 중요하다', '수익률 4%는 보장되니 안심해도 된다', '늦게 시작해도 결과는 항상 같다'], a: 0,
+    exp: '시작 시기가 결과를 크게 바꿔요. 단, 4%는 예시 가정일 뿐이고 실제 수익은 상품과 시장에 따라 달라요. 원금을 잃을 수 있는 상품도 있으니 가입 전에 꼭 확인하세요.', hint: '수익률이 "가정"이라고 했던 걸 기억하세요.' },
+  { t: 'talk', lines: [['d', '하루야, 첫 월급부터 연금까지, 1년 동안 정말 많이 배웠다!', 'cheer'], ['h', '이제 월급 명세서도, 은행 안내문도 혼자 읽을 수 있어. 고마워, 다람아!'], ['d', '내 도토리 창고만큼 하루의 지식 창고도 가득 찼어!', 'cheer']] }
+]}
+};
+const ALL = CH.flatMap(c => c.lessons);
+
+const PLACEMENT = [
+  { lid: '1-1', q: '계약서에 적힌 월급과 매달 통장에 들어오는 돈은 보통 같다.', a: 1 },
+  { lid: '1-3', q: '100만 원을 연 3%로 1년 맡기면 이자는 3만 원이다.', a: 0 },
+  { lid: '2-3', q: '복리는 받은 이자에도 다시 이자가 붙는 방식이다.', a: 0 },
+  { lid: '3-2', q: '신용카드로 쓴 돈은 다음 달에 갚아야 하는 돈이다.', a: 0 },
+  { lid: '4-3', q: '예금 금리보다 물가가 더 많이 오르면, 내 돈으로 살 수 있는 양은 줄어든다.', a: 0 },
+  { lid: '5-1', q: '직장인의 국민연금 보험료는 회사가 절반을 함께 낸다.', a: 0 }
+];
+const PL_OPTS = ['O 맞아요', 'X 아니에요', '잘 모르겠어요'];
+
+/* ---------------- 6. 시뮬레이션 ---------------- */
+function pmt(P, annual, n) { const r = annual / 12; if (r === 0) return P / n; return P * r / (1 - Math.pow(1 + r, -n)); }
+function fvMonthly(m, annual, n) { const i = annual / 12; if (i === 0) return m * n; return m * (Math.pow(1 + i, n) - 1) / i; }
+const C = { deep: '#0F4C3A', green: '#0E9F7A', orange: '#F2994A', mint: '#9FD3BF', brown: '#B4693C' };
+const CHECK = '기본값은 예시예요. 실제 금리·세율 등 현재 기준은 직접 확인하세요.';
+const SIMS = {
+  savings: { title: '적금 이자 계산기', ch: 2, desc: '매달 넣는 돈과 금리를 넣고, 실제로 받는 이자를 확인해요.',
+    params: [{ k: 'm', label: '매달 넣는 돈', unit: '만 원', min: 1, max: 300, step: 1, def: 50 }, { k: 'r', label: '연 금리(세전)', unit: '%', min: 0.1, max: 10, step: 0.1, def: 3.5 },
+             { k: 'n', label: '기간', unit: '개월', min: 1, max: 60, step: 1, def: 12 }, { k: 'tax', label: '이자 세율', unit: '%', min: 0, max: 30, step: 0.1, def: 15.4 }],
+    compute(v) {
+      const M = v.m * 1e4, r = v.r / 100, n = Math.round(v.n), principal = M * n, pre = M * (r / 12) * n * (n + 1) / 2, net = pre * (1 - v.tax / 100), naive = principal * r * n / 12;
+      return { chart: { type: 'bar', labels: ['흔한 착각\n(넣은 돈 전체×금리)', '실제 세전 이자', '세후 이자'], series: [{ data: [naive, pre, net], colors: [C.mint, C.green, C.deep] }], barLabel: won },
+        stats: [['넣은 돈 합계', man(principal)], ['세전 이자', won(pre)], ['세금', won(pre - net)], ['만기에 받는 돈', won(principal + net)]] };
+    }, note: '단리·월 단위 계산이에요. 실제 상품은 계산 방식이나 세금 혜택이 다를 수 있어요. ' + CHECK },
+  compound: { title: '단리·복리 비교', ch: 2, desc: '이자를 붙이는 방식에 따라 시간이 지나면 얼마나 달라지는지 봐요.',
+    params: [{ k: 'p', label: '맡기는 돈', unit: '만 원', min: 100, max: 10000, step: 100, def: 1000 }, { k: 'r', label: '연 금리', unit: '%', min: 0.5, max: 10, step: 0.1, def: 5 }, { k: 'y', label: '기간', unit: '년', min: 1, max: 40, step: 1, def: 30 }],
+    compute(v) {
+      const P = v.p * 1e4, r = v.r / 100, n = Math.round(v.y), xs = [], s = [], c = [];
+      for (let t = 0; t <= n; t++) { xs.push(t); s.push(P * (1 + r * t)); c.push(P * Math.pow(1 + r, t)); }
+      return { chart: { type: 'line', labels: xs, xUnit: '년', series: [{ name: '단리', data: s, color: C.orange }, { name: '복리', data: c, color: C.green }] },
+        stats: [[`${n}년 뒤 단리`, man(s[n])], [`${n}년 뒤 복리`, man(c[n])], ['차이', man(c[n] - s[n])]] };
+    }, note: '세금은 빼지 않은 세전 기준, 1년 단위 교육용 계산이에요.' },
+  loan: { title: '대출 월 상환액', ch: 3, desc: '빌린 돈을 매달 같은 금액씩 갚을 때, 금리에 따라 매달 내는 돈과 총이자가 어떻게 바뀌는지 봐요.',
+    params: [{ k: 'p', label: '빌리는 돈', unit: '만 원', min: 100, max: 50000, step: 100, def: 1000 }, { k: 'y', label: '기간', unit: '년', min: 1, max: 40, step: 1, def: 3 }, { k: 'r', label: '연 금리', unit: '%', min: 0.5, max: 15, step: 0.1, def: 5 }],
+    compute(v) {
+      const P = v.p * 1e4, n = Math.round(v.y) * 12, top = Math.max(10, Math.ceil(v.r) + 1), labels = [], data = [];
+      for (let a = 1; a <= top + 1e-9; a += 0.5) { labels.push(a); data.push(pmt(P, a / 100, n)); }
+      const m = pmt(P, v.r / 100, n);
+      return { chart: { type: 'line', labels, xUnit: '%', series: [{ name: '금리별 월 상환액', data, color: C.green }], marker: { fi: (v.r - 1) / 0.5, value: m, label: nf(v.r, 1) + '%' } },
+        stats: [['매달 내는 돈', won(m)], ['총 상환액', man(m * n)], ['총이자', man(m * n - P)]] };
+    }, note: '매달 같은 금액씩 원금과 이자를 함께 갚는 방식(원리금균등) 기준이에요. ' + CHECK },
+  purchase: { title: '돈의 가치 변화', ch: 4, desc: '물가가 오르면 같은 돈으로 살 수 있는 양이 얼마나 줄어드는지 봐요.',
+    params: [{ k: 'p', label: '지금 가진 돈', unit: '만 원', min: 10, max: 10000, step: 10, def: 100 }, { k: 'i', label: '물가 상승률(연)', unit: '%', min: 0, max: 10, step: 0.1, def: 3 }, { k: 'y', label: '기간', unit: '년', min: 1, max: 40, step: 1, def: 20 }],
+    compute(v) {
+      const P = v.p * 1e4, i = v.i / 100, n = Math.round(v.y), xs = [], d = [];
+      for (let t = 0; t <= n; t++) { xs.push(t); d.push(P / Math.pow(1 + i, t)); }
+      return { chart: { type: 'line', labels: xs, xUnit: '년', series: [{ name: '지금 돈으로 바꾼 가치', data: d, color: C.orange }] },
+        stats: [[`${n}년 뒤 실제 가치`, man(d[n])], ['줄어든 비율', nf((1 - d[n] / P) * 100, 1) + '%'], ['같은 물건을 사려면', man(P * Math.pow(1 + i, n))]] };
+    }, note: '매년 같은 비율로 물가가 오른다고 가정한 교육용 계산이에요.' },
+  real: { title: '내 예금의 진짜 수익', ch: 4, desc: '예금 금리에서 세금과 물가를 빼고, 내 돈이 실제로 얼마나 불어나는지 확인해요.',
+    params: [{ k: 'p', label: '맡기는 돈', unit: '만 원', min: 10, max: 10000, step: 10, def: 1000 }, { k: 'r', label: '연 금리(세전)', unit: '%', min: 0.1, max: 10, step: 0.1, def: 3.5 },
+             { k: 'tax', label: '이자 세율', unit: '%', min: 0, max: 30, step: 0.1, def: 15.4 }, { k: 'i', label: '물가 상승률(연)', unit: '%', min: 0, max: 10, step: 0.1, def: 3 }, { k: 'y', label: '기간', unit: '년', min: 1, max: 10, step: 1, def: 1 }],
+    compute(v) {
+      const P = v.p * 1e4, after = v.r / 100 * (1 - v.tax / 100), i = v.i / 100, n = Math.round(v.y);
+      const nominal = P * Math.pow(1 + after, n), real = nominal / Math.pow(1 + i, n), rr = ((1 + after) / (1 + i) - 1) * 100, gain = real - P;
+      return { chart: { type: 'bar', labels: ['넣은 돈', '만기 금액\n(통장 숫자)', '지금 돈 가치로\n바꾼 금액'], series: [{ data: [P, nominal, real], colors: [C.mint, C.green, C.orange] }], barLabel: x => man(x, 1) },
+        stats: [['세후 금리(연)', nf(after * 100, 2) + '%'], ['실질 수익률(연)', (rr >= 0 ? '+' : '') + nf(rr, 2) + '%'], ['실제로 늘어난 가치', (gain >= 0 ? '+' : '−') + won(Math.abs(gain))], ['현금으로 두었다면', man(P / Math.pow(1 + i, n), 1)]] };
+    }, note: '매년 세후 이자를 다시 맡긴다고 가정했어요. ' + CHECK },
+  pension: { title: '노후 자금, 언제 시작할까', ch: 5, desc: '매달 같은 돈을 모을 때, 시작 나이에 따라 모이는 돈이 얼마나 달라지는지 봐요.',
+    params: [{ k: 'm', label: '매달 모으는 돈', unit: '만 원', min: 1, max: 100, step: 1, def: 20 }, { k: 'r', label: '연 수익률(가정)', unit: '%', min: 0, max: 8, step: 0.1, def: 4 },
+             { k: 'a', label: '시작 나이', unit: '살', min: 20, max: 50, step: 1, def: 25 }, { k: 'e', label: '모으는 마지막 나이', unit: '살', min: 50, max: 65, step: 1, def: 60 }],
+    compute(v) {
+      const M = v.m * 1e4, r = v.r / 100, a = Math.round(v.a), e = Math.max(Math.round(v.e), a + 1), late = a + 10;
+      const ages = [], mine = [], later = [];
+      for (let age = 20; age <= e; age++) {
+        ages.push(age);
+        mine.push(age > a ? fvMonthly(M, r, (age - a) * 12) : 0);
+        later.push(age > late ? fvMonthly(M, r, (age - late) * 12) : 0);
+      }
+      const total = fvMonthly(M, r, (e - a) * 12), totalLate = late < e ? fvMonthly(M, r, (e - late) * 12) : 0;
+      return { chart: { type: 'line', labels: ages, xUnit: '살', series: [{ name: `${a}살에 시작`, data: mine, color: C.green }, { name: `${late}살에 시작`, data: later, color: C.orange }] },
+        stats: [[`${a}살 시작 · 넣은 돈`, man(M * (e - a) * 12)], [`${e}살에 모인 돈`, man(total)], [`${late}살에 시작하면`, man(totalLate)], ['차이', man(total - totalLate)]] };
+    }, note: '매달 같은 금액을 넣고 수익률이 해마다 일정하다고 가정한 교육용 계산이에요. 실제 수익은 보장되지 않고, 세금·수수료는 반영하지 않았어요. 특정 상품을 추천하지 않아요.' }
+};
+
+function niceMax(m) { if (m <= 0) return 1; const e = Math.pow(10, Math.floor(Math.log10(m))), f = m / e; return [1, 1.2, 1.6, 2, 2.4, 3.2, 4, 6, 8, 10].find(x => f <= x + 1e-9) * e; }
+function drawChart(cv, cfg) {
+  const dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 320, H = cfg.type === 'bar' ? 240 : 220;
+  cv.width = W * dpr; cv.height = H * dpr; cv.style.height = H + 'px';
+  const c = cv.getContext && cv.getContext('2d'); if (!c) return;
+  c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+  const padL = 50, padR = 14, padT = cfg.type === 'bar' ? 26 : 16, padB = cfg.type === 'bar' ? 44 : 28, pw = W - padL - padR, ph = H - padT - padB;
+  let max = 0; cfg.series.forEach(s => s.data.forEach(d => { max = Math.max(max, d); })); if (cfg.marker) max = Math.max(max, cfg.marker.value);
+  const top = niceMax(max * 1.04), y = v => padT + ph - (v / top) * ph;
+  c.font = '11px "Noto Sans KR", sans-serif'; c.textBaseline = 'middle';
+  for (let i = 0; i <= 4; i++) { const v = top * i / 4, yy = Math.round(y(v)) + .5; c.strokeStyle = i === 0 ? '#b9cfc6' : '#e6efeb'; c.lineWidth = 1; c.beginPath(); c.moveTo(padL, yy); c.lineTo(W - padR, yy); c.stroke(); c.fillStyle = '#7b8c85'; c.textAlign = 'right'; c.fillText(axisMan(v), padL - 6, yy); }
+  if (cfg.type === 'line') {
+    const n = cfg.labels.length, x = i => padL + (n === 1 ? pw / 2 : pw * i / (n - 1)), stepL = Math.max(1, Math.ceil(n / 6));
+    c.textAlign = 'center'; c.fillStyle = '#7b8c85';
+    for (let i = 0; i < n; i += stepL) c.fillText(nf(cfg.labels[i], 1) + (cfg.xUnit || ''), x(i), H - padB + 14);
+    cfg.series.forEach(s => { c.strokeStyle = s.color; c.lineWidth = 3; c.lineJoin = 'round'; c.beginPath(); s.data.forEach((d, i) => { i ? c.lineTo(x(i), y(d)) : c.moveTo(x(i), y(d)); }); c.stroke();
+      const li = s.data.length - 1; c.fillStyle = s.color; c.beginPath(); c.arc(x(li), y(s.data[li]), 4, 0, Math.PI * 2); c.fill(); });
+    if (cfg.marker) { const mx = padL + pw * cfg.marker.fi / (n - 1), my = y(cfg.marker.value);
+      c.strokeStyle = 'rgba(15,76,58,.35)'; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(mx, my); c.lineTo(mx, padT + ph); c.stroke(); c.setLineDash([]);
+      c.fillStyle = C.deep; c.beginPath(); c.arc(mx, my, 6, 0, Math.PI * 2); c.fill(); c.fillStyle = '#fff'; c.beginPath(); c.arc(mx, my, 2.5, 0, Math.PI * 2); c.fill();
+      c.fillStyle = C.deep; c.font = 'bold 12px "Noto Sans KR", sans-serif'; const rt = mx > W - 90; c.textAlign = rt ? 'right' : 'left'; c.fillText(cfg.marker.label, mx + (rt ? -10 : 10), my - 12); }
+  } else {
+    const s = cfg.series[0], n = cfg.labels.length, slot = pw / n, bw = Math.min(70, slot * .56);
+    s.data.forEach((d, i) => { const cx = padL + slot * (i + .5), yy = y(d), h = padT + ph - yy, r = Math.min(8, h / 2);
+      c.fillStyle = s.colors[i]; c.beginPath(); c.moveTo(cx - bw / 2, padT + ph); c.lineTo(cx - bw / 2, yy + r); c.quadraticCurveTo(cx - bw / 2, yy, cx - bw / 2 + r, yy); c.lineTo(cx + bw / 2 - r, yy); c.quadraticCurveTo(cx + bw / 2, yy, cx + bw / 2, yy + r); c.lineTo(cx + bw / 2, padT + ph); c.fill();
+      c.fillStyle = C.deep; c.font = 'bold 12px "Noto Sans KR", sans-serif'; c.textAlign = 'center'; c.fillText(cfg.barLabel ? cfg.barLabel(d) : axisMan(d), cx, yy - 10);
+      c.fillStyle = '#5f6f68'; c.font = '11px "Noto Sans KR", sans-serif'; String(cfg.labels[i]).split('\n').forEach((ln, k) => c.fillText(ln, cx, padT + ph + 14 + k * 14)); });
+  }
+}
+const liveSims = new Set();
+window.addEventListener('resize', () => liveSims.forEach(f => f()));
+function mountSim(el, key, preset = {}) {
+  const def = SIMS[key]; if (!el || !def) return;
+  const v = {}, uid = 's' + Math.random().toString(36).slice(2, 7);
+  def.params.forEach(p => { v[p.k] = preset[p.k] != null ? preset[p.k] : p.def; });
+  el.innerHTML = `<div class="sim"><div class="sim-title">${def.title}</div>
+    ${def.params.map(p => `<div class="ctrl"><div class="ctrl-top"><label for="${uid}-${p.k}">${p.label}</label><span class="ctrl-val"><input type="number" inputmode="decimal" data-n="${p.k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${v[p.k]}" aria-label="${p.label} 직접 입력">${p.unit}</span></div>
+      <input type="range" id="${uid}-${p.k}" data-r="${p.k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${v[p.k]}"></div>`).join('')}
+    <div class="legend"></div><canvas role="img" aria-label="${def.title} 그래프"></canvas><div class="sim-out"></div><p class="sim-note">※ ${def.note}</p></div>`;
+  const cv = $('canvas', el);
+  const update = () => {
+    if (!el.isConnected) { liveSims.delete(update); return; }
+    const out = def.compute(v);
+    $('.legend', el).innerHTML = out.chart.type === 'line' && out.chart.series.length > 1 ? out.chart.series.map(s => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('') : '';
+    drawChart(cv, out.chart);
+    $('.sim-out', el).innerHTML = `<div class="sim-stats">${out.stats.map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('')}</div>`;
+  };
+  def.params.forEach(p => {
+    const r = $(`[data-r="${p.k}"]`, el), n = $(`[data-n="${p.k}"]`, el);
+    r.addEventListener('input', () => { v[p.k] = +r.value; n.value = r.value; update(); });
+    n.addEventListener('change', () => { let x = parseFloat(String(n.value).replace(/,/g, '')); if (isNaN(x)) x = v[p.k]; x = Math.min(p.max, Math.max(p.min, x)); v[p.k] = x; n.value = x; r.value = x; update(); });
+  });
+  liveSims.add(update); update();
+}
+
+/* ---------------- 7. 레슨 엔진 ---------------- */
+const GRADED = ['choice', 'ox', 'blank', 'notice', 'slide', 'say', 'match', 'order'];
+const KIND = { choice: '골라 보기', ox: 'O / X', blank: '빈칸 채우기', notice: '안내문 읽기', slide: '직접 움직여 보기', say: '하루의 대답 고르기', match: '짝 맞추기', order: '순서대로 놓기' };
+const OK_LINES = ['좋아, 정답이야!', '완벽해!', '역시 하루를 잘 도와주는구나!', '바로 그거야!'];
+const NG_LINES = ['아쉽다! 같이 다시 볼까?', '괜찮아, 틀리면서 배우는 거야.', '앗, 헷갈렸지? 이렇게 생각해 봐.'];
+let actx = null;
+function feedbackFx(ok) {
+  if (S.sound !== false) {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const t0 = actx.currentTime, notes = ok ? [660, 880] : [240, 190];
+      notes.forEach((f, i) => {
+        const o = actx.createOscillator(), g = actx.createGain(), t = t0 + i * 0.09;
+        o.type = ok ? 'sine' : 'triangle'; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.16, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+        o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + 0.18);
+      });
+    } catch (e) { /* 소리를 낼 수 없는 환경이면 조용히 넘어감 */ }
+  }
+  if (!ok && navigator.vibrate) { try { navigator.vibrate(60); } catch (e) { } }
+}
+function setFocus(on) { document.body.classList.toggle('focus', on); }
+function hideFb() { const f = $('#fbp'); f.classList.add('hidden'); f.innerHTML = ''; document.body.classList.remove('fbopen'); }
+function setAction(html) { let a = $('#actionbar'); if (!a) { a = document.createElement('div'); a.id = 'actionbar'; a.className = 'actionbar'; document.body.appendChild(a); } a.innerHTML = `<div>${html}</div>`; return a; }
+function clearAction() { const a = $('#actionbar'); if (a) a.remove(); }
+
+function docHTML(d) {
+  let body;
+  if (d.cols) body = `<thead><tr>${d.cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${d.rows.map(r => `<tr><th>${r[0]}</th>${r.slice(1).map(x => `<td>${x}</td>`).join('')}</tr>`).join('')}</tbody>`;
+  else body = `<tbody>${d.rows.map(r => `<tr><th>${r[0]}</th><td class="${/원$/.test(r[1]) ? 'num' : ''}">${r[1]}</td></tr>`).join('')}${d.sum ? `<tr class="sum"><th>${d.sum[0]}</th><td class="num">${d.sum[1]}</td></tr>` : ''}</tbody>`;
+  return `<div class="doc"><div class="doc-bank">${d.bank}</div><div class="doc-title">${d.title}</div><table>${body}</table>${d.note ? `<div class="doc-note">${d.note}</div>` : ''}</div>`;
+}
+function askHTML(step, st) {
+  const hint = step.hint && st && st.streak >= 2 ? `<div class="hint">💡 ${T(step.hint)}</div>` : '';
+  const q = step.t === 'blank' ? '빈칸에 들어갈 말을 골라 줘!' : step.t === 'slide' ? '슬라이더를 움직여서 확인해 봐!' : step.t === 'match' ? (step.q || '용어를 누르고, 알맞은 뜻을 눌러 짝을 맞춰 봐!') : step.q;
+  return `<div class="ask">${daram(hint ? 'think' : 'normal', 70)}<div class="speech"><span class="kind">${KIND[step.t] || ''}</span>${T(q)}${hint}</div></div>`;
+}
+function lineHTML([w, text, mood]) {
+  if (w === 'n') return `<div class="narr">${T(text)}</div>`;
+  const p = WHO[w];
+  return `<div class="line ${p.side}"><div class="av">${p.av(mood)}</div><div class="say"><div class="who">${p.name}</div><div class="bubble">${T(text)}</div></div></div>`;
+}
+
+function renderStep(sess) {
+  const st = sess.st; hideFb(); clearAction();
+  if (st.pos >= st.queue.length) { sess.onDone(); return; }
+  const idx = st.queue[st.pos], step = sess.steps[idx], retry = st.queue.slice(0, st.pos).includes(idx), pct = Math.round(st.pos / st.queue.length * 100);
+  setFocus(true);
+  app().innerHTML = `<div class="lesson-top"><button class="icon-btn" id="quit" aria-label="나가기 (진행 상황은 저장돼요)">✕</button>
+      <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><div style="width:${Math.max(pct, 3)}%"></div></div>
+      <span class="pill acorn">${ACORN}${S.acorns}</span></div>
+    <div class="lesson-name">${sess.title}</div>${sess.banner || ''}
+    ${retry ? '<div class="retry">🔁 아까 틀렸던 문제예요</div>' : ''}<div id="stage"></div>`;
+  $('#quit').onclick = () => { clearAction(); hideFb(); sess.onQuit(); };
+  window.scrollTo(0, 0);
+  if (step.t === 'talk') renderTalk(sess, step); else renderQuestion(sess, idx, step);
+}
+function renderTalk(sess, step) {
+  const stage = $('#stage'); stage.innerHTML = '<div class="chat" id="chat"></div><p class="tap-hint">대화를 누르거나 아래 버튼으로 넘겨요</p>';
+  const chat = $('#chat'); let k = 0;
+  const bar = setAction('<button class="btn" id="talkNext">다음</button>'); const btn = $('#talkNext', bar);
+  const advance = () => { sess.st.pos++; sess.persist(); renderStep(sess); };
+  const reveal = () => {
+    if (k < step.lines.length) {
+      chat.insertAdjacentHTML('beforeend', lineHTML(step.lines[k])); k++;
+      const last = chat.lastElementChild; if (last && last.scrollIntoView) last.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+    if (k >= step.lines.length) { btn.textContent = '계속'; btn.onclick = advance; }
+  };
+  btn.onclick = reveal;
+  chat.addEventListener('click', e => { if (!e.target.closest('.term') && k < step.lines.length) reveal(); });
+  reveal();
+}
+function renderQuestion(sess, idx, step) {
+  if (step.t === 'say') return renderSay(sess, idx, step);
+  if (step.t === 'match') return renderMatch(sess, idx, step);
+  if (step.t === 'order') return renderOrder(sess, idx, step);
+  const stage = $('#stage'), st = sess.st;
+  let body = '';
+  if (step.t === 'notice') body += docHTML(step.doc);
+  body += askHTML(step, st);
+  if (step.t === 'slide') body += `${step.task ? `<div class="task">🎛️ ${step.task}</div>` : ''}<div id="simbox"></div>`;
+  if (step.t === 'ox') body += `<div class="ox"><button type="button" class="opt o" data-i="0"><span class="mark">O</span><span>맞아요</span></button><button type="button" class="opt x" data-i="1"><span class="mark">X</span><span>아니에요</span></button></div>`;
+  else if (step.t === 'blank') body += `<div class="sentence">${T(step.q).replace('___', '<span class="slot">&nbsp;</span>')}</div><div class="chips">${step.opts.map((o, i) => `<button type="button" class="opt" data-i="${i}">${P(o)}</button>`).join('')}</div>`;
+  else body += `${step.t === 'slide' ? `<div class="speech plain" style="margin:0 0 12px;font-weight:700">${T(step.q)}</div>` : ''}<div class="opts">${step.opts.map((o, i) => `<button type="button" class="opt" data-i="${i}">${P(o)}</button>`).join('')}</div>`;
+  stage.innerHTML = body;
+  if (step.t === 'slide') mountSim($('#simbox'), step.sim, step.preset || {});
+  const correctIdx = step.t === 'ox' ? (step.a ? 0 : 1) : step.a;
+  $$('#stage .opt').forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, ok = i === correctIdx;
+    $$('#stage .opt').forEach(x => { x.disabled = true; if (+x.dataset.i === correctIdx) x.classList.add('correct'); });
+    if (!ok) b.classList.add('wrong');
+    if (step.t === 'blank') { const sl = $('#stage .slot'); sl.textContent = P(step.opts[i]); sl.classList.add(ok ? 'ok' : 'bad'); }
+    answer(sess, idx, step, ok);
+  });
+}
+function hintHTML(step, st) { return step.hint && st.streak >= 2 ? `<div class="hint">💡 ${T(step.hint)}</div>` : ''; }
+/* 대화 속에서 하루의 대답 고르기 */
+function renderSay(sess, idx, step) {
+  const stage = $('#stage');
+  stage.innerHTML = `<div class="chat" id="chat" style="min-height:0">${(step.lines || []).map(lineHTML).join('')}<div class="narr">💬 ${step.q || '하루는 뭐라고 할까?'}</div></div>
+    ${hintHTML(step, sess.st)}<div class="opts say-opts" style="margin-top:14px">${step.opts.map((o, i) => `<button type="button" class="opt" data-i="${i}">${P(o)}</button>`).join('')}</div>`;
+  $$('#stage .opt').forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, ok = i === step.a;
+    $$('#stage .opt').forEach(x => { x.disabled = true; if (+x.dataset.i === step.a) x.classList.add('correct'); });
+    if (!ok) b.classList.add('wrong');
+    $('#chat').insertAdjacentHTML('beforeend', lineHTML(['h', P(step.opts[i]).replace(/^"|"$/g, '')]));
+    answer(sess, idx, step, ok);
+  });
+}
+/* 짝 맞추기: 하나라도 틀리게 연결하면 오답 처리(그래도 끝까지 맞춘 뒤 해설) */
+function renderMatch(sess, idx, step) {
+  const stage = $('#stage'), n = step.pairs.length, L = shuffle(step.pairs.map((_, i) => i)), R = shuffle(step.pairs.map((_, i) => i));
+  stage.innerHTML = askHTML(step, sess.st) + `<div class="match"><div class="col l">${L.map(i => `<button type="button" class="opt" data-side="l" data-i="${i}">${step.pairs[i][0]}</button>`).join('')}</div>
+    <div class="col r">${R.map(i => `<button type="button" class="opt" data-side="r" data-i="${i}">${step.pairs[i][1]}</button>`).join('')}</div></div>`;
+  let sel = null, miss = 0, done = 0;
+  $$('#stage .match .opt').forEach(b => b.onclick = () => {
+    if (b.classList.contains('done')) return;
+    if (!sel || sel.dataset.side === b.dataset.side) { if (sel) sel.classList.remove('sel'); sel = b; b.classList.add('sel'); return; }
+    const a = sel; sel = null; a.classList.remove('sel');
+    if (a.dataset.i === b.dataset.i) {
+      [a, b].forEach(x => { x.classList.add('done'); x.disabled = true; });
+      if (++done === n) answer(sess, idx, step, miss === 0, miss ? `${miss}번 헷갈렸지만 끝까지 맞췄어요.` : '');
+    } else {
+      miss++; feedbackFx(false);
+      [a, b].forEach(x => { x.classList.remove('miss'); void x.offsetWidth; x.classList.add('miss'); });
+    }
+  });
+}
+/* 순서대로 놓기 */
+function renderOrder(sess, idx, step) {
+  const stage = $('#stage'), n = step.items.length;
+  let pool = shuffle(step.items.map((_, i) => i)); if (pool.every((v, i) => v === i)) pool = pool.reverse();
+  const chosen = [];
+  stage.innerHTML = askHTML(step, sess.st) + `<div class="order-sel" id="oSel"></div><div class="order-pool" id="oPool"></div><button class="btn" id="oCheck" disabled>확인</button>`;
+  const draw = () => {
+    $('#oSel').innerHTML = chosen.map(i => `<button type="button" class="opt" data-i="${i}">${step.items[i]}</button>`).join('');
+    $('#oPool').innerHTML = pool.filter(i => !chosen.includes(i)).map(i => `<button type="button" class="opt" data-i="${i}">${step.items[i]}</button>`).join('');
+    $('#oCheck').disabled = chosen.length !== n;
+    $$('#oPool .opt').forEach(b => b.onclick = () => { chosen.push(+b.dataset.i); draw(); });
+    $$('#oSel .opt').forEach(b => b.onclick = () => { chosen.splice(chosen.indexOf(+b.dataset.i), 1); draw(); });
+  };
+  draw();
+  $('#oCheck').onclick = () => {
+    const ok = chosen.every((v, i) => v === i);
+    $$('#oSel .opt').forEach((b, k) => { b.disabled = true; b.classList.add(+b.dataset.i === k ? 'correct' : 'wrong'); });
+    $('#oCheck').remove();
+    answer(sess, idx, step, ok, ok ? '' : '정답 순서: ' + step.items.map((x, i) => `${i + 1}. ${x}`).join(' → '));
+  };
+}
+function answer(sess, idx, step, ok, extra) {
+  const st = sess.st; markStudy();
+  const retry = st.queue.slice(0, st.pos).includes(idx);
+  let requeued = false, earned = 0;
+  feedbackFx(ok);
+  st.combo = ok ? (st.combo || 0) + 1 : 0;
+  if (ok) {
+    st.correct++; st.streak = 0;
+    if (!retry && !sess.noReward) { earned = 1; S.acorns++; st.earned = (st.earned || 0) + 1; }
+    sess.onCorrect && sess.onCorrect(step, idx);
+  } else {
+    st.wrong++; st.streak++;
+    if (!sess.noRequeue && !st.requeued.includes(idx)) { st.requeued.push(idx); st.queue.push(idx); requeued = true; }
+    sess.onWrong && sess.onWrong(step, idx);
+  }
+  st.pos++; sess.persist();
+  const f = $('#fbp');
+  f.innerHTML = `<div class="fbp-in ${ok ? 'good' : 'bad'}" role="status">
+    <div class="fbp-head">${daram(ok ? 'happy' : 'oops', 58)}<div><b>${pick(ok ? OK_LINES : NG_LINES)}</b>${earned ? `<span class="plus">+1 ${ACORN}</span>` : ''}${st.combo >= 3 ? `<span class="combo">🔥 ${st.combo}연속 정답!</span>` : ''}</div></div>
+    ${extra ? `<div class="fbp-exp"><b>${extra}</b></div>` : ''}<div class="fbp-exp">${T(step.exp || '')}</div>
+    ${requeued ? '<p class="fbp-note">🔁 이 문제는 레슨 끝에서 한 번 더 나와요.</p>' : ''}
+    ${!ok && st.streak === 2 ? '<p class="fbp-note">💡 다음 문제부터 다람이가 힌트를 줄게요.</p>' : ''}
+    <button class="btn ${ok ? '' : 'red'}" id="cont">계속</button></div>`;
+  f.classList.remove('hidden'); document.body.classList.add('fbopen');
+  $('#cont').onclick = () => renderStep(sess);
+  const pill = $('.lesson-top .pill'); if (pill) pill.innerHTML = ACORN + S.acorns;
+}
+
+/* ---------------- 8. 화면 ---------------- */
+function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2200); }
+function topbar() {
+  return `<div class="topbar"><div class="brand">${daram('normal', 34)}<b>머니스텝</b><small>스토리</small></div>
+    <div class="pills"><span class="pill" title="누적 학습일">📅 ${S.days.length}일</span><span class="pill acorn" title="모은 도토리">${ACORN}${S.acorns}</span></div></div>`;
+}
+function nextLesson() {
+  const cur = S.current && S.lessons[S.current] && S.lessons[S.current].status === 'doing' ? S.current : null;
+  if (cur) return cur;
+  if (S.placement && S.placement.start && !isDone(S.placement.start)) return S.placement.start;
+  return ALL.find(l => !isDone(l)) || null;
+}
+const OFFSETS = [0, 58, 0, -58];
+function viewHome() {
+  setFocus(false);
+  if (!S.intro) { viewIntro(); return; }
+  const nx = nextLesson(), doing = nx && S.lessons[nx] && S.lessons[nx].status === 'doing', doneN = ALL.filter(isDone).length;
+  let msg;
+  if (doneN === ALL.length) msg = `<b class="t">1년 이야기 완주! 🎉</b>하루와 함께 ${ALL.length}개 레슨을 모두 마쳤어. 헷갈리는 건 용어장과 시뮬레이션에서 언제든 다시 봐!`;
+  else if (doing) msg = `<b class="t">이어서 해 볼까?</b>${nx} ${L[nx].title} — 하던 곳부터 시작해.<button class="btn" data-lesson="${nx}">이어서 하기</button>`;
+  else if (doneN === 0) msg = `<b class="t">하루의 1년을 함께 따라가 보자!</b>오늘은 5분이면 충분해. ${nx} ${L[nx].title}부터!<button class="btn" data-lesson="${nx}">시작하기</button>`;
+  else msg = `<b class="t">오늘도 왔구나!</b>다음 이야기는 ${nx} ${L[nx].title}. 원하는 레슨을 골라도 돼.<button class="btn" data-lesson="${nx}">계속 가기</button>`;
+  let html = topbar();
+  if (!storageOk) html += '<div class="notice-bar">이 브라우저에서는 기록이 저장되지 않아요(시크릿 모드 등). 새로고침하면 진행 상황이 사라질 수 있어요.</div>';
+  html += `<div class="hello">${daram(doneN === ALL.length ? 'cheer' : 'happy', 84)}<div class="speech">${msg}</div></div>`;
+  if (S.wrongBank.length || doneN) html += `<button class="list-item" data-go="#review"><span><b>🔁 복습 3문제</b><span>틀렸던 문제와 자주 본 용어부터 나와요</span></span><span>›</span></button>`;
+  CH.forEach(ch => {
+    const done = ch.lessons.filter(isDone).length;
+    html += `<section class="chapter" style="--c:${ch.color}"><div class="ch-banner"><small>${ch.id}장 · ${ch.month}</small><h2>${ch.title}</h2><p>${ch.story}</p>
+      <div class="prog"><i><b style="width:${done / ch.lessons.length * 100}%"></b></i>${done}/${ch.lessons.length}</div></div><div class="path">`;
+    ch.lessons.forEach((lid, i) => {
+      const les = L[lid], st = S.lessons[lid], x = OFFSETS[i % 4];
+      const cls = ['node', isDone(lid) ? 'done' : st && st.status === 'doing' ? 'doing' : '', lid === nx ? 'next' : '', les.mission ? 'mission' : ''].join(' ');
+      const buddy = lid === nx ? `<div class="buddy ${x > 0 ? 'l' : 'r'}"><span>${doing ? '이어서!' : '여기부터!'}</span>${daram('happy', 64)}</div>` : '';
+      html += `<div class="stop" style="--x:${x}px">${buddy}<button class="${cls}" data-lesson="${lid}" aria-label="${lid} ${les.title}">${les.icon}</button>${isDone(lid) ? '<span class="ck">✓</span>' : ''}
+        <div class="stop-label">${les.title}<small>${lid}${les.mission ? ' · 도전' : ''}${st && st.status === 'doing' ? ` · 진행 중` : ''}</small></div></div>`;
+    });
+    html += '</div></section>';
+  });
+  html += `<p class="small" style="text-align:center">레슨은 잠겨 있지 않아요. 원하는 곳부터 눌러 보세요.<br>등장하는 회사·은행·상품은 모두 가상이며, 특정 금융 상품을 추천하지 않아요.</p>`;
+  app().innerHTML = html;
+}
+function openLessonSheet(lid) {
+  const les = L[lid], st = S.lessons[lid], ch = CH.find(c => c.id === les.ch);
+  const qn = les.steps.filter(s => GRADED.includes(s.t)).length;
+  const label = st && st.status === 'doing' ? '이어서 하기' : isDone(lid) ? '다시 보기' : '시작하기';
+  openSheet(`<div style="display:flex;gap:12px;align-items:center"><div style="font-size:40px">${les.icon}</div><div><small class="small">${ch.id}장 ${ch.title} · ${lid}${les.mission ? ' · 도전 미션' : ''}</small><h3>${les.title}</h3></div></div>
+    <p>${les.sub}</p><p class="small">문제 ${qn}개 · 약 5분 · 맞힐 때마다 도토리 +1${les.mission ? ', 완료하면 +5' : ', 완료하면 +3'}</p>
+    <button class="btn" data-start="${lid}">${label}</button>`);
+}
+function viewIntro() {
+  setFocus(true);
+  app().innerHTML = `<div style="text-align:center;padding-top:20px">${daram('cheer', 150)}
+    <h1 class="page-title" style="font-size:30px;margin-top:6px">안녕! 나는 다람이야</h1>
+    <p>도토리 모으기가 특기인 다람쥐지.<br>올봄 첫 출근한 <b>하루</b>가 돈 때문에 고민이 많대.<br>1년 동안 하루를 같이 도와주지 않을래?</p>
+    <div class="card" style="text-align:left;margin-top:16px"><b>이렇게 배워요</b>
+      <p class="small" style="margin:6px 0 0">📖 하루의 하루하루를 대화로 따라가요<br>✅ 하루가 고민할 때 정답을 골라 도와줘요<br>🌰 맞힐 때마다 도토리를 모아요<br>💛 틀려도 괜찮아요. 하트도, 끊기는 연속 기록도 없어요</p></div></div>`;
+  setAction(`<button class="btn" id="goStart">처음부터 시작할게</button><div style="height:10px"></div><button class="btn ghost" id="goPl">내가 아는 만큼 확인하기 (6문제)</button>`);
+  $('#goStart').onclick = () => { S.intro = true; S.placement = { start: '1-1', skipped: true }; save(); clearAction(); navigate('#home'); };
+  $('#goPl').onclick = () => { S.intro = true; save(); clearAction(); navigate('#placement'); };
+}
+function openLesson(lid) {
+  const les = L[lid]; if (!les) { navigate('#home'); return; }
+  let st = S.lessons[lid];
+  if (!st || st.status !== 'doing') { st = { status: 'doing', queue: les.steps.map((_, i) => i), pos: 0, requeued: [], streak: 0, correct: 0, wrong: 0, earned: 0, everDone: !!(st && st.everDone), doneCount: (st && st.doneCount) || 0 }; S.lessons[lid] = st; }
+  S.current = lid; save();
+  renderStep({
+    title: `${les.ch}장 · ${les.title}`, steps: les.steps, st,
+    persist() { S.lessons[lid] = st; save(); },
+    onWrong(step, idx) { if (!S.wrongBank.some(w => w.lid === lid && w.idx === idx)) S.wrongBank.push({ lid, idx, at: today() }); },
+    onQuit() { navigate('#home'); },
+    onDone() {
+      const first = !st.everDone, bonus = first ? (les.mission ? 5 : 3) : 0;
+      S.acorns += bonus; st.bonus = bonus;
+      st.status = 'done'; st.everDone = true; st.doneAt = today(); st.doneCount = (st.doneCount || 0) + 1;
+      if (S.current === lid) S.current = null; save();
+      navigate('#done/' + lid);
+    }
+  });
+}
+function viewDone(lid) {
+  const les = L[lid], st = S.lessons[lid]; if (!les || !st) { navigate('#home'); return; }
+  setFocus(true); hideFb();
+  const graded = les.steps.filter(s => GRADED.includes(s.t)).length, firstOk = graded - st.requeued.length;
+  const ch = CH.find(c => c.id === les.ch), chDone = ch.lessons.every(isDone), allDone = ALL.every(isDone);
+  const nxt = ALL[ALL.indexOf(lid) + 1], terms = termsIn(les.steps);
+  const title = allDone ? '1년 이야기 완주!' : chDone && les === L[ch.lessons[ch.lessons.length - 1]] ? `${ch.id}장 클리어!` : les.mission ? '도전 성공!' : '레슨 완료!';
+  app().innerHTML = `<div class="result">${daram('cheer', 140)}<h2>${title}</h2><p>${les.title}</p>
+    <div class="reward"><div><b>${ACORN}+${(st.earned || 0) + (st.bonus || 0)}</b><span>받은 도토리</span></div><div><b>${firstOk}/${graded}</b><span>한 번에 맞힘</span></div></div>
+    ${st.requeued.length ? '<p class="small">틀렸던 문제는 복습함에 넣어 두었어요.</p>' : ''}
+    ${allDone ? `<div class="card" style="text-align:left"><b>🏁 이제 혼자서도 할 수 있어요</b><p class="small" style="margin:4px 0 0">월급 명세서, 은행 상품 안내문, 대출 비교표를 읽고 판단할 준비가 됐어요. 막히는 단어는 용어장에서 다시 찾아보세요.</p></div>` : ''}
+    ${terms.length ? `<div class="small" style="margin-top:6px">이번에 만난 용어</div><div class="chip-list">${terms.map(t => `<button class="term" data-term="${t}">${t}</button>`).join('')}</div>` : ''}</div>`;
+  setAction(`${nxt && !allDone ? `<button class="btn" data-lesson-go="${nxt}">다음 이야기: ${L[nxt].title}</button><div style="height:10px"></div>` : ''}<button class="btn ghost" data-go="#home">지도로 돌아가기</button>`);
+}
+function viewPlacement() {
+  setFocus(true); let i = 0; const res = [];
+  const draw = () => {
+    if (i >= PLACEMENT.length) return finish();
+    const q = PLACEMENT[i];
+    app().innerHTML = `<div class="lesson-top"><button class="icon-btn" id="quit" aria-label="나가기">✕</button><div class="bar"><div style="width:${Math.max(i / PLACEMENT.length * 100, 3)}%"></div></div><span class="small">${i + 1}/${PLACEMENT.length}</span></div>
+      <div class="ask">${daram('think', 70)}<div class="speech"><span class="kind">아는 만큼 확인하기 · 모르면 "잘 모르겠어요"도 괜찮아</span>${q.q}</div></div>
+      <div class="opts">${PL_OPTS.map((o, k) => `<button type="button" class="opt" data-i="${k}">${o}</button>`).join('')}</div>`;
+    $('#quit').onclick = () => navigate('#home');
+    $$('.opt').forEach(b => b.onclick = () => { res.push(+b.dataset.i === q.a); i++; draw(); });
+  };
+  const finish = () => {
+    const miss = PLACEMENT.findIndex((q, k) => !res[k]), start = miss === -1 ? '5-2' : PLACEMENT[miss].lid, score = res.filter(Boolean).length;
+    S.placement = { start, score, at: today() }; save();
+    app().innerHTML = `<div class="result">${daram(score >= 4 ? 'cheer' : 'happy', 130)}<h2>${score}/${PLACEMENT.length} 정답!</h2>
+      <p>${score >= 4 ? '와, 꽤 많이 알고 있구나!' : '좋아, 같이 차근차근 가 보자!'}<br>추천 시작 지점은 <b>${start} ${L[start].title}</b>이야.</p>
+      <p class="small">추천일 뿐이에요. 지도에서 어떤 레슨이든 골라 볼 수 있어요.</p></div>`;
+    setAction(`<button class="btn" data-lesson-go="${start}">추천 레슨 시작</button><div style="height:10px"></div><button class="btn ghost" data-go="#home">지도 보기</button>`);
+  };
+  draw();
+}
+/* 복습 */
+function termQuestion(k) {
+  const others = shuffle(Object.keys(TERMS).filter(x => x !== k && !x.includes(k) && !k.includes(x))).slice(0, 2), opts = shuffle([k, ...others]);
+  return { t: 'choice', q: `이 설명에 맞는 용어는?<div class="hint" style="background:var(--mint)">${TERMS[k].d}</div>`, opts, a: opts.indexOf(k), exp: `<b>${k}</b> — 예) ${TERMS[k].ex}`, _term: k };
+}
+const REVIEWABLE = ['choice', 'ox', 'blank', 'notice', 'say', 'match', 'order'];
+function buildReview(n = 3) {
+  const out = [], used = new Set();
+  const add = w => { const key = w.lid + ':' + w.idx, st = L[w.lid] && L[w.lid].steps[w.idx]; if (!st || used.has(key) || !REVIEWABLE.includes(st.t)) return false; used.add(key); out.push(Object.assign({}, st, { _src: { lid: w.lid, idx: w.idx } })); return true; };
+  for (const w of [...S.wrongBank].reverse()) { if (out.length >= 2) break; add(w); }
+  const terms = Object.entries(S.glossary).filter(([k]) => TERMS[k]).sort((a, b) => b[1] - a[1]).map(e => e[0]);
+  for (const k of terms) { if (out.length >= n) break; out.push(termQuestion(k)); }
+  for (const w of [...S.wrongBank].reverse()) { if (out.length >= n) break; add(w); }
+  for (const lid of shuffle(ALL.filter(l => isDone(l) || (S.lessons[l] && S.lessons[l].pos > 0)))) {
+    for (const idx of shuffle(L[lid].steps.map((_, i) => i))) { if (out.length >= n) break; add({ lid, idx }); }
+    if (out.length >= n) break;
+  }
+  return out;
+}
+function viewReview(mode) {
+  const steps = buildReview(3);
+  if (!steps.length) { setFocus(false); app().innerHTML = `${topbar()}<div class="hello">${daram('think', 84)}<div class="speech"><b class="t">아직 복습할 게 없어!</b>레슨을 하나 끝내거나 용어를 눌러 보면 복습 문제가 생겨.<button class="btn" data-go="#home">지도로</button></div></div>`; return; }
+  const st = { queue: steps.map((_, i) => i), pos: 0, requeued: [], streak: 0, correct: 0, wrong: 0, earned: 0 }, back = mode === 'back';
+  const sess = {
+    title: back ? '오랜만이야! 지난 내용 3문제로 몸풀기' : '복습 3문제', steps, st, noRequeue: true,
+    banner: back ? `<div class="hello" style="margin:0 0 14px">${daram('happy', 64)}<div class="speech"><b class="t">오랜만이야!</b>지난번 내용 3문제만 풀고 시작하자. <button class="btn sm ghost" id="skipRv" style="margin-top:8px">건너뛰기</button></div></div>` : '',
+    persist() { save(); },
+    onCorrect(step) { if (step._src) S.wrongBank = S.wrongBank.filter(w => !(w.lid === step._src.lid && w.idx === step._src.idx)); },
+    onQuit() { navigate('#home'); },
+    onDone() {
+      hideFb();
+      app().innerHTML = `<div class="result">${daram('cheer', 130)}<h2>복습 완료!</h2><p>${st.correct}/${steps.length} 정답 · 도토리 +${st.earned}</p>
+        <p class="small">${st.wrong ? '틀린 문제는 복습함에 남겨 두었어요.' : '맞힌 오답은 복습함에서 뺐어요.'}</p></div>`;
+      setAction(`${nextLesson() ? `<button class="btn" data-lesson-go="${nextLesson()}">이야기 이어 가기</button><div style="height:10px"></div>` : ''}<button class="btn ghost" data-go="#home">지도로</button>`);
+    }
+  };
+  renderStep(sess); sess.banner = '';
+  const sk = $('#skipRv'); if (sk) sk.onclick = () => { clearAction(); navigate('#home'); };
+}
+/* 시뮬레이션 */
+function viewSimList() {
+  setFocus(false);
+  app().innerHTML = `${topbar()}<h1 class="page-title">시뮬레이션</h1><p class="page-sub">슬라이더를 움직이면 그래프와 숫자가 바로 바뀌어요. 내 숫자를 직접 넣어 볼 수도 있어요.</p>
+    ${CH.map(ch => { const ks = Object.keys(SIMS).filter(k => SIMS[k].ch === ch.id); return ks.length ? `<div class="section-label">${ch.id}장 · ${ch.title}</div>` + ks.map(k => `<button class="list-item" data-go="#sim/${k}"><span><b>${SIMS[k].title}</b><span>${SIMS[k].desc}</span></span><span>›</span></button>`).join('') : ''; }).join('')}
+    <p class="small" style="margin-top:14px">모든 결과는 이해를 돕기 위한 계산이며, 특정 금융 상품을 추천하지 않아요.</p>`;
+}
+function viewSim(key) {
+  const s = SIMS[key]; if (!s) { navigate('#sim'); return; }
+  setFocus(false);
+  app().innerHTML = `<button class="back" data-go="#sim">‹ 시뮬레이션 목록</button><h1 class="page-title">${s.title}</h1><p class="page-sub">${s.desc}</p><div id="simfull"></div>`;
+  mountSim($('#simfull'), key, {});
+}
+/* 용어장 */
+function viewGlossary() {
+  setFocus(false);
+  const list = Object.entries(S.glossary).filter(([k]) => TERMS[k]).sort((a, b) => b[1] - a[1]);
+  let html = `${topbar()}<h1 class="page-title">내 용어장</h1><p class="page-sub">이야기 속에서 눌러 본 용어가 모여요. 자주 본 용어일수록 복습에 먼저 나와요.</p>`;
+  if (!list.length) html += `<div class="hello">${daram('think', 80)}<div class="speech"><b class="t">아직 비어 있어!</b>대화 속 <span class="term" style="cursor:default">밑줄 친 단어</span>를 눌러 보면 여기에 쌓여.</div></div>`;
+  else html += `<button class="btn" data-go="#review" style="margin-bottom:14px">자주 본 용어로 복습하기</button>` + list.map(([k, c]) => `<div class="gloss"><div class="gloss-top"><b>${k}</b><span class="badge ${c >= 3 ? 'o' : ''}">${c}번 봤어요</span></div><p>${TERMS[k].d}</p><p class="ex">예) ${TERMS[k].ex}</p></div>`).join('');
+  const rest = Object.keys(TERMS).filter(k => !S.glossary[k]);
+  if (rest.length) html += `<details><summary>아직 안 본 용어 ${rest.length}개</summary><div class="chip-list" style="justify-content:flex-start">${rest.map(t => `<button class="term" data-term="${t}">${t}</button>`).join('')}</div></details>`;
+  html += `<p class="small" style="margin-top:14px">용어 풀이는 한국은행 「경제금융용어 700선」의 뜻을 바탕으로 쉬운 말로 다시 썼어요.</p>`;
+  app().innerHTML = html;
+}
+/* 기록 */
+function viewRecords() {
+  setFocus(false);
+  const doneN = ALL.filter(isDone).length, tot = Object.values(S.lessons).reduce((a, s) => { a.c += s.correct || 0; a.w += s.wrong || 0; return a; }, { c: 0, w: 0 });
+  app().innerHTML = `${topbar()}<h1 class="page-title">기록</h1><p class="page-sub">가입 없이 이 브라우저에 저장돼요.</p>
+    <div class="stats"><div class="stat"><b>${S.days.length}</b><span>누적 학습일</span></div><div class="stat"><b>${doneN}</b><span>완료 레슨</span></div><div class="stat"><b>${S.acorns}</b><span>모은 도토리</span></div></div>
+    <div class="card"><b>장별 진행</b>${CH.map(c => { const d = c.lessons.filter(isDone).length; return `<div style="margin-top:10px;font-size:14px;display:flex;justify-content:space-between"><span>${c.id}장 ${c.title}</span><span class="small">${d}/${c.lessons.length}</span></div><div class="ubar"><div style="width:${d / c.lessons.length * 100}%;background:${c.color}"></div></div>`; }).join('')}
+      <p class="small" style="margin-top:12px">푼 문제 ${tot.c + tot.w}개 · 정답 ${tot.c}개 · 복습함 ${S.wrongBank.length}개</p></div>
+    <div class="card"><b>효과음·진동</b><p class="small">정답·오답일 때 짧은 소리를 내고, 오답이면 휴대폰이 살짝 진동해요.</p><button class="btn sm ${S.sound === false ? '' : 'ghost'}" id="sound">${S.sound === false ? '효과음 켜기' : '효과음 끄기'}</button></div>
+    <div class="card"><b>기록 옮기기</b><p class="small">브라우저 데이터를 지우거나 기기를 바꾸면 기록이 사라져요. 파일로 내보내 두었다가 불러올 수 있어요.</p>
+      <div class="btn-row"><button class="btn sm" id="exp">기록 내보내기</button><button class="btn sm ghost" id="impBtn">기록 불러오기</button></div><input type="file" id="imp" accept="application/json,.json" hidden></div>
+    <div class="card"><b>처음부터 다시</b><p class="small">진행 상황, 도토리, 용어장, 복습함을 모두 지워요.</p><button class="btn sm ghost" id="reset" style="color:var(--red)">기록 초기화</button>
+      <details><summary>테스트용 도구</summary><p class="small">며칠 만에 접속한 상황(복습 3문제부터 시작)을 확인할 때 써요.</p><button class="btn sm ghost" id="fakeAway">마지막 접속일을 5일 전으로 바꾸기</button></details></div>`;
+  $('#sound').onclick = () => { S.sound = S.sound === false; save(); toast(S.sound ? '효과음을 켰어요' : '효과음을 껐어요'); viewRecords(); };
+  $('#exp').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' })); a.download = `moneystep-story-기록-${today()}.json`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); };
+  $('#impBtn').onclick = () => $('#imp').click();
+  $('#imp').onchange = e => { const f = e.target.files[0]; if (!f) return; const rd = new FileReader();
+    rd.onload = () => { try { const d = JSON.parse(rd.result); if (!d || d.version !== 1 || typeof d.lessons !== 'object' || !('acorns' in d)) throw 0; S = Object.assign(blankState(), d); save(); toast('기록을 불러왔어요'); viewRecords(); } catch (err) { toast('머니스텝 스토리 기록 파일이 아니에요'); } };
+    rd.readAsText(f); };
+  $('#reset').onclick = () => { if (confirm('정말 모든 기록을 지울까요? 되돌릴 수 없어요.')) { S = blankState(); save(); toast('기록을 초기화했어요'); navigate('#home'); } };
+  $('#fakeAway').onclick = () => { const d = new Date(); d.setDate(d.getDate() - 5); S.lastVisit = today(d); save(); toast('새로고침하면 복습 3문제부터 시작해요'); };
+}
+
+/* ---------------- 9. 시트·용어 ---------------- */
+function openSheet(html) { const sh = $('#sheet'); $('.sheet-panel', sh).innerHTML = html; sh.classList.remove('hidden'); const b = $('.sheet-panel .btn', sh); if (b) b.focus(); }
+function closeSheet() { $('#sheet').classList.add('hidden'); }
+function openTerm(t) {
+  const d = TERMS[t]; if (!d) return;
+  S.glossary[t] = (S.glossary[t] || 0) + 1; save();
+  openSheet(`<div style="display:flex;gap:10px;align-items:flex-end">${daram('happy', 64)}<div class="speech"><h3>${t}</h3>${d.d}</div></div>
+    <div class="sheet-ex"><b>생활 예시</b>${d.ex}</div><div class="sheet-meta">📒 내 용어장에 저장됨 · ${S.glossary[t]}번째 열람</div><button class="btn" data-close>알겠어!</button>`);
+}
+document.addEventListener('click', e => {
+  const tb = e.target.closest('.term[data-term]'); if (tb) { e.preventDefault(); e.stopPropagation(); openTerm(tb.dataset.term); return; }
+  if (e.target.closest('[data-close]')) { closeSheet(); return; }
+  const sl = e.target.closest('[data-start]'); if (sl) { closeSheet(); navigate('#lesson/' + sl.dataset.start); return; }
+  const ln = e.target.closest('[data-lesson]'); if (ln) { openLessonSheet(ln.dataset.lesson); return; }
+  const lg = e.target.closest('[data-lesson-go]'); if (lg) { clearAction(); navigate('#lesson/' + lg.dataset.lessonGo); return; }
+  const go = e.target.closest('[data-go]'); if (go && !go.disabled) { e.preventDefault(); clearAction(); navigate(go.dataset.go); }
+}, true);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+/* ---------------- 10. 내부 라우터 ----------------
+   주소창의 #을 바꾸지 않아서, 미리보기 창(iframe)이나 파일로 열어도 다른 페이지로 튕기지 않음 */
+let ROUTE = '#home';
+function navigate(h) { ROUTE = h; route(); }
+function route() {
+  closeSheet(); hideFb(); clearAction();
+  const [v, a] = (ROUTE.slice(1) || 'home').split('/');
+  switch (v) {
+    case 'lesson': openLesson(a); break;
+    case 'done': viewDone(a); break;
+    case 'placement': viewPlacement(); break;
+    case 'review': viewReview(a); break;
+    case 'sim': a ? viewSim(a) : viewSimList(); break;
+    case 'glossary': viewGlossary(); break;
+    case 'records': viewRecords(); break;
+    default: viewHome();
+  }
+  const nk = ['sim', 'glossary', 'records'].includes(v) ? v : 'home';
+  $$('.nav button').forEach(x => x.classList.toggle('on', x.dataset.nav === nk));
+  if (v !== 'lesson' && v !== 'review') window.scrollTo(0, 0);
+}
+(function init() {
+  const t = today(), prev = S.lastVisit;
+  const away = S.intro && prev && daysBetween(prev, t) >= 3 && buildReview(1).length > 0;
+  S.lastVisit = t; save();
+  navigate(away ? '#review/back' : '#home');
+})();
+</script>
+</body>
+</html>
