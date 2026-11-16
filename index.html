@@ -611,7 +611,7 @@ const L = {
   { t: 'choice', q: '현금을 오랫동안 서랍에만 두면?', opts: ['숫자는 그대로라 아무 손해가 없다', '물가가 오르는 만큼 살 수 있는 양이 줄어든다', '물가가 오르면 현금 가치도 함께 오른다'], a: 1,
     exp: '돈의 숫자는 그대로여도 [[인플레이션]] 때문에 [[구매력]]이 줄어요. 그럼 은행에 맡기면 해결될까요? 다음 레슨에서!', hint: '"물가가 몰래 가져간다"고 했어요.' }
 ]},
-'4-3': { ch: 4, icon: '⚖️', title: '이자가 붙었는데 제자리?', sub: '명목금리와 실질금리', steps: [
+'4-3': { ch: 4, tool: 'real', icon: '⚖️', title: '이자가 붙었는데 제자리?', sub: '명목금리와 실질금리', steps: [
   { t: 'talk', lines: [['d', '100만 원을 연 3%로 맡겨서 1년 뒤 103만 원이 됐어. 그런데 그동안 물가도 3% 올랐다면?', 'think'], ['h', '작년에 100만 원짜리 물건이 이제 103만 원이니까… 제자리네?!'], ['d', '정답! 안내문에 적힌 금리는 [[명목금리]], 물가가 오른 만큼 뺀 진짜 늘어난 비율은 [[실질금리]]야.', 'happy']] },
   { t: 'choice', q: '금리 연 4%, 물가상승률 1%라면 실질금리는 약?', opts: ['약 5%', '약 3%', '약 1%'], a: 1,
     exp: '4% − 1% = 약 3%. [[실질금리]]는 대략 금리에서 [[물가상승률]]을 빼면 돼요.', hint: '빼기 한 번이면 돼요.' },
@@ -715,14 +715,14 @@ const SIMS = {
       return { chart: { type: 'line', labels: xs, xUnit: '년', series: [{ name: '지금 돈으로 바꾼 가치', data: d, color: C.orange }] },
         stats: [[`${n}년 뒤 실제 가치`, man(d[n])], ['줄어든 비율', nf((1 - d[n] / P) * 100, 1) + '%'], ['같은 물건을 사려면', man(P * Math.pow(1 + i, n))]] };
     }, note: '매년 같은 비율로 물가가 오른다고 가정한 교육용 계산이에요.' },
-  real: { title: '내 예금의 진짜 수익', ch: 4, desc: '예금 금리에서 세금과 물가를 빼고, 내 돈이 실제로 얼마나 불어나는지 확인해요.',
+  real: { title: '내 예금의 진짜 수익', ch: 4, after: '4-3', desc: '예금 금리에서 세금과 물가를 빼고, 내 돈이 실제로 얼마나 불어나는지 확인해요.',
     params: [{ k: 'p', label: '맡기는 돈', unit: '만 원', min: 10, max: 10000, step: 10, def: 1000 }, { k: 'r', label: '연 금리(세전)', unit: '%', min: 0.1, max: 10, step: 0.1, def: 3.5 },
              { k: 'tax', label: '이자 세율', unit: '%', min: 0, max: 30, step: 0.1, def: 15.4 }, { k: 'i', label: '물가 상승률(연)', unit: '%', min: 0, max: 10, step: 0.1, def: 3 }, { k: 'y', label: '기간', unit: '년', min: 1, max: 10, step: 1, def: 1 }],
     compute(v) {
       const P = v.p * 1e4, after = v.r / 100 * (1 - v.tax / 100), i = v.i / 100, n = Math.round(v.y);
       const nominal = P * Math.pow(1 + after, n), real = nominal / Math.pow(1 + i, n), rr = ((1 + after) / (1 + i) - 1) * 100, gain = real - P;
       return { chart: { type: 'bar', labels: ['넣은 돈', '만기 금액\n(통장 숫자)', '지금 돈 가치로\n바꾼 금액'], series: [{ data: [P, nominal, real], colors: [C.mint, C.green, C.orange] }], barLabel: x => man(x, 1) },
-        stats: [['세후 금리(연)', nf(after * 100, 2) + '%'], ['실질 수익률(연)', (rr >= 0 ? '+' : '') + nf(rr, 2) + '%'], ['실제로 늘어난 가치', (gain >= 0 ? '+' : '−') + won(Math.abs(gain))], ['현금으로 두었다면', man(P / Math.pow(1 + i, n), 1)]] };
+        stats: [['세후 이자', won(nominal - P)], ['지금 돈 가치로', won(real)], ['실질 수익률(연)', (rr >= 0 ? '+' : '−') + nf(Math.abs(rr), 2) + '%'], ['실제로 늘어난 가치', (gain >= 0 ? '+' : '−') + won(Math.abs(gain))], ['현금으로 두었다면', won(P / Math.pow(1 + i, n))], ['세후 금리(연)', nf(after * 100, 2) + '%']] };
     }, note: '매년 세후 이자를 다시 맡긴다고 가정했어요. ' + CHECK },
   pension: { title: '노후 자금, 언제 시작할까', ch: 5, desc: '매달 같은 돈을 모을 때, 시작 나이에 따라 모이는 돈이 얼마나 달라지는지 봐요.',
     params: [{ k: 'm', label: '매달 모으는 돈', unit: '만 원', min: 1, max: 100, step: 1, def: 20 }, { k: 'r', label: '연 수익률(가정)', unit: '%', min: 0, max: 8, step: 0.1, def: 4 },
@@ -1065,6 +1065,7 @@ function viewDone(lid) {
     <div class="reward"><div><b>${ACORN}+${(st.earned || 0) + (st.bonus || 0)}</b><span>받은 도토리</span></div><div><b>${firstOk}/${graded}</b><span>한 번에 맞힘</span></div></div>
     ${st.requeued.length ? '<p class="small">틀렸던 문제는 복습함에 넣어 두었어요.</p>' : ''}
     ${allDone ? `<div class="card" style="text-align:left"><b>🏁 이제 혼자서도 할 수 있어요</b><p class="small" style="margin:4px 0 0">월급 명세서, 은행 상품 안내문, 대출 비교표를 읽고 판단할 준비가 됐어요. 막히는 단어는 용어장에서 다시 찾아보세요.</p></div>` : ''}
+    ${les.tool && SIMS[les.tool] ? `<div class="card" style="text-align:left;margin-top:4px"><b>🎛️ 4장 도구가 열렸어요: ${SIMS[les.tool].title}</b><p class="small" style="margin:4px 0 10px">${SIMS[les.tool].desc} 내 예금 금액과 금리를 넣어 보세요.</p><button class="btn sm" data-go="#sim/${les.tool}">도구 열기</button></div>` : ''}
     ${terms.length ? `<div class="small" style="margin-top:6px">이번에 만난 용어</div><div class="chip-list">${terms.map(t => `<button class="term" data-term="${t}">${t}</button>`).join('')}</div>` : ''}</div>`;
   setAction(`${nxt && !allDone ? `<button class="btn" data-lesson-go="${nxt}">다음 이야기: ${L[nxt].title}</button><div style="height:10px"></div>` : ''}<button class="btn ghost" data-go="#home">지도로 돌아가기</button>`);
 }
@@ -1132,7 +1133,7 @@ function viewReview(mode) {
 function viewSimList() {
   setFocus(false);
   app().innerHTML = `${topbar()}<h1 class="page-title">시뮬레이션</h1><p class="page-sub">슬라이더를 움직이면 그래프와 숫자가 바로 바뀌어요. 내 숫자를 직접 넣어 볼 수도 있어요.</p>
-    ${CH.map(ch => { const ks = Object.keys(SIMS).filter(k => SIMS[k].ch === ch.id); return ks.length ? `<div class="section-label">${ch.id}장 · ${ch.title}</div>` + ks.map(k => `<button class="list-item" data-go="#sim/${k}"><span><b>${SIMS[k].title}</b><span>${SIMS[k].desc}</span></span><span>›</span></button>`).join('') : ''; }).join('')}
+    ${CH.map(ch => { const ks = Object.keys(SIMS).filter(k => SIMS[k].ch === ch.id); return ks.length ? `<div class="section-label">${ch.id}장 · ${ch.title}</div>` + ks.map(k => `<button class="list-item" data-go="#sim/${k}"><span><b>${SIMS[k].title}</b><span>${SIMS[k].desc}</span></span><span>${SIMS[k].after ? (isDone(SIMS[k].after) ? `<span class="badge">${ch.id}장 도구</span>` : `<span class="badge o">${SIMS[k].after} 후 추천</span>`) : '›'}</span></button>`).join('') : ''; }).join('')}
     <p class="small" style="margin-top:14px">모든 결과는 이해를 돕기 위한 계산이며, 특정 금융 상품을 추천하지 않아요.</p>`;
 }
 function viewSim(key) {
